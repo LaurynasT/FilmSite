@@ -29,21 +29,21 @@ namespace NetRefreshTokenDemo.Api.Controllers
         {
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
-            
+
             if (user == null)
                 return NotFound("User not found");
-            
+
             var query = _context.WatchList.Where(w => w.UserId == user.Id);
-            
+
             if (!string.IsNullOrEmpty(mediaType))
             {
                 query = query.Where(w => w.MediaType == mediaType.ToLower());
             }
-            
+
             var watchList = await query
                 .OrderByDescending(w => w.AddedOn)
                 .ToListAsync();
-                
+
             return Ok(watchList);
         }
 
@@ -52,22 +52,22 @@ namespace NetRefreshTokenDemo.Api.Controllers
         {
             if (string.IsNullOrEmpty(model.MediaType) || (model.MediaType != "movie" && model.MediaType != "tv"))
                 return BadRequest("MediaType must be either 'movie' or 'tv'");
-                
+
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
-            
+
             if (user == null)
                 return NotFound("User not found");
-                
+
             var existing = await _context.WatchList
-                .FirstOrDefaultAsync(w => 
-                    w.UserId == user.Id && 
-                    w.MediaId == model.MediaId && 
+                .FirstOrDefaultAsync(w =>
+                    w.UserId == user.Id &&
+                    w.MediaId == model.MediaId &&
                     w.MediaType == model.MediaType);
-                
+
             if (existing != null)
                 return BadRequest("Media already in watch list");
-                
+
             var watchListItem = new WatchListItem
             {
                 UserId = user.Id,
@@ -77,10 +77,10 @@ namespace NetRefreshTokenDemo.Api.Controllers
                 PosterPath = model.PosterPath,
                 AddedOn = DateTime.UtcNow
             };
-            
+
             _context.WatchList.Add(watchListItem);
             await _context.SaveChangesAsync();
-            
+
             return Ok(watchListItem);
         }
 
@@ -89,46 +89,46 @@ namespace NetRefreshTokenDemo.Api.Controllers
         {
             if (string.IsNullOrEmpty(mediaType) || (mediaType != "movie" && mediaType != "tv"))
                 return BadRequest("MediaType must be either 'movie' or 'tv'");
-                
+
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
-            
+
             if (user == null)
                 return NotFound("User not found");
-                
+
             var watchListItem = await _context.WatchList
-                .FirstOrDefaultAsync(w => 
-                    w.UserId == user.Id && 
-                    w.MediaId == mediaId && 
+                .FirstOrDefaultAsync(w =>
+                    w.UserId == user.Id &&
+                    w.MediaId == mediaId &&
                     w.MediaType == mediaType);
-                
+
             if (watchListItem == null)
                 return NotFound("Media not in watch list");
-                
+
             _context.WatchList.Remove(watchListItem);
             await _context.SaveChangesAsync();
-            
+
             return Ok();
         }
-        
+
         [HttpGet("check")]
         public async Task<IActionResult> CheckWatchList([FromQuery] int mediaId, [FromQuery] string mediaType)
         {
             if (string.IsNullOrEmpty(mediaType) || (mediaType != "movie" && mediaType != "tv"))
                 return BadRequest("MediaType must be either 'movie' or 'tv'");
-                
+
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
-            
+
             if (user == null)
                 return NotFound("User not found");
-                
+
             var isInWatchList = await _context.WatchList
-                .AnyAsync(w => 
-                    w.UserId == user.Id && 
-                    w.MediaId == mediaId && 
+                .AnyAsync(w =>
+                    w.UserId == user.Id &&
+                    w.MediaId == mediaId &&
                     w.MediaType == mediaType);
-                
+
             return Ok(new { isInWatchList });
         }
     }

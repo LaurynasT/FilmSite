@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import WatchListButton from "../assets/WatchListButton.jsx";
 import { useAuth } from '../assets/AuthContext'; 
+import User from "../Icons/user.png";
 
 const MovieDetail = () => {
     const { id } = useParams();
@@ -194,7 +195,7 @@ const MovieDetail = () => {
                         {credits.cast.map((cast) => (
                             <div key={cast.id} className="cast-card" onClick={() => handleNavigateToActor(cast.id)}>
                                 <img
-                                    src={cast.profile_path ? `${IMAGE_BASE_URL}${cast.profile_path}` : "https://via.placeholder.com/120"}
+                                    src={cast.profile_path ? `${IMAGE_BASE_URL}${cast.profile_path}` : User }
                                     alt={cast.name}
                                     className="cast-image"
                                 />

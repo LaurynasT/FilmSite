@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NetRefreshTokenDemo.Api.Data;
+using NetRefreshTokenDemo.Api.Interfaces;
 using NetRefreshTokenDemo.Api.Models;
 using NetRefreshTokenDemo.Api.Services;
 
@@ -23,7 +24,7 @@ if (string.IsNullOrEmpty(connectionString))
 }
 
 
-builder.Services.AddDbContext<AppDbContext>(options => 
+builder.Services.AddDbContext<AppDbContext>(options =>
                           options.UseNpgsql(connectionString));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -50,7 +51,7 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:secret"] ?? throw new InvalidOperationException("JWT secret is missing")))
     };
-    
+
     // Add this event handler to extract token from cookies
     options.Events = new JwtBearerEvents
     {
@@ -62,7 +63,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-    builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
@@ -71,14 +72,14 @@ builder.Services.AddAuthentication(options =>
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
-    
+
     options.AddPolicy("AllowCredentials", policy =>
     {
         policy
             .WithOrigins("http://localhost:3000", "http://192.168.1.207:3000", "http://localhost:5173", "http://192.168.1.207:5173")
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials(); 
+            .AllowCredentials();
     });
 });
 
@@ -86,11 +87,17 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 
-builder.Services.AddControllers(); 
+builder.Services.AddControllers();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddHttpClient<IOpenAIService, OpenAIService>();
-builder.Services.AddHttpClient<ITmdbService, TmdbService>();
+builder.Services.AddHttpClient<ITmdbMovieInterface, TmdbMovieService>();
+builder.Services.AddHttpClient<ITmdbTvInterface, TmdbTvService>();
+builder.Services.AddHttpClient<ITmdbSearchInterface, TmdbSearchService>();
+builder.Services.AddHttpClient<ITmdbGenreInterface, TmdbGenreService>();
+builder.Services.AddHttpClient<ITmdbTrendingInterface, TmdbTrendingService>();
 builder.Services.AddHttpClient<IMediaLookupService, MediaLookupService>();
+builder.Services.AddHttpClient<ITmdbPeopleInterface, TmdbPeopleService>();
+builder.Services.AddHttpClient<ITmdbCompanyInterface, TmdbCompanyService>();
 
 var app = builder.Build();
 
@@ -103,15 +110,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowCredentials");
-app.UseAuthentication(); 
+app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers(); 
+app.MapControllers();
 
 
 
 try
 {
-    await DbSeeder.SeedData(app);  
+    await DbSeeder.SeedData(app);
 }
 catch (Exception ex)
 {

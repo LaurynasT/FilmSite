@@ -88,7 +88,7 @@ const ActorPage = () => {
             style={{ cursor: "pointer" }} 
           >
             <img
-              src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w500${item.poster_Path}`}
               alt={item.title || item.name}
               className="movie-poster"
             />

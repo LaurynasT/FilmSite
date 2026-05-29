@@ -39,15 +39,15 @@ const CompanyDetails = () => {
                 <div className="background">
                     <div className="moviedetail-container">
                     <img
-                            src={`${IMAGE_BASE_URL}${company.logo_path}`}
+                            src={`${IMAGE_BASE_URL}${company.logo_Path}`}
                             alt={company.name}
                             className="moviedetail-img"
                         />
                     </div>
                     <div className="moviedetail-genres">
-                        <span  className="movie-genre-badge">{company.name}, {company.origin_country}, 
-                            {company.desciption},
-                            {company.homepage}</span>
+                        <span  className="movie-genre-badge">{company.name}, {company.origin_Country}, 
+                            {company.description},
+                            {company.homePage}</span>
                     </div>
                     
                 </div>

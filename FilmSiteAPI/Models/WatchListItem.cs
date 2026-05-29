@@ -11,7 +11,7 @@ public class WatchListItem
     public string Title { get; set; }
     public string PosterPath { get; set; }
     public DateTime AddedOn { get; set; }
-    
+
     // Navigation property
     public ApplicationUser User { get; set; }
 }

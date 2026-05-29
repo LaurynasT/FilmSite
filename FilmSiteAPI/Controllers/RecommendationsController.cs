@@ -18,7 +18,7 @@ namespace NetRefreshTokenDemo.Api.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOpenAIService _openAIService;
-        private readonly IMediaLookupService _mediaLookupService; 
+        private readonly IMediaLookupService _mediaLookupService;
 
         public RecommendationsController(
             AppDbContext context,
@@ -40,7 +40,7 @@ namespace NetRefreshTokenDemo.Api.Controllers
 
             if (user == null)
                 return NotFound("User not found");
-            
+
             var query = _context.Favorites.Where(f => f.UserId == user.Id);
 
             if (!string.IsNullOrEmpty(mediaType))
@@ -58,10 +58,10 @@ namespace NetRefreshTokenDemo.Api.Controllers
 
             if (favorites.Count == 0)
                 return Ok(new { message = "Add some favorites first to get recommendations" });
-            
+
             var recommendations = await _openAIService.GetRecommendationsAsync(favorites, mediaType);
-            
-            
+
+
             await EnhanceRecommendationsWithIds(recommendations, mediaType);
 
             return Ok(recommendations);
@@ -85,7 +85,7 @@ namespace NetRefreshTokenDemo.Api.Controllers
                 string.IsNullOrEmpty(request.MediaType) ? null : request.MediaType
             );
 
-           
+
             await EnhanceRecommendationsWithIds(recommendations, request.MediaType);
 
             return Ok(recommendations);
@@ -98,13 +98,13 @@ namespace NetRefreshTokenDemo.Api.Controllers
 
             foreach (var recommendation in recommendations.Recommendations)
             {
-                
+
                 var mediaId = await _mediaLookupService.LookupMediaIdAsync(
                     recommendation.Title,
                     string.IsNullOrEmpty(mediaType) ? null : mediaType
                 );
 
-                
+
                 recommendation.Id = mediaId;
             }
         }
@@ -114,7 +114,7 @@ namespace NetRefreshTokenDemo.Api.Controllers
     {
         [Required]
         public string Prompt { get; set; }
-        
+
         public string? MediaType { get; set; }
     }
 }

@@ -1,14 +1,13 @@
 import axios from "axios";
 
-const TMDB_API_KEY = import.meta.env.VITE_APP_TMDB_KEY;
-const BASE_URL = "https://api.themoviedb.org/3";
+
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const BACKEND_BASE_URL = "http://localhost:5135/api";
 
 export const fetchMovieDetail = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/movie/${id}`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}`, {
+      params: { language: "en-US" },
     });
     return response.data;
   } catch (error) {
@@ -19,14 +18,22 @@ export const fetchMovieDetail = async (id) => {
 
 export const fetchMovieTrailer = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/movie/${id}/videos`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
-    });
-    const videos = response.data.results;
-    const officialTrailer = videos.find(
-      (video) => video.type === "Trailer" && video.site === "YouTube"
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/movie/${id}/trailer`
     );
-    return officialTrailer ? `https://www.youtube.com/embed/${officialTrailer.key}` : null;
+
+    const videos = response.data.results;
+
+    const officialTrailer = videos.find(
+      (video) =>
+        video.type === "Trailer" &&
+        video.site === "YouTube"
+    );
+
+    return officialTrailer
+      ? `https://www.youtube.com/embed/${officialTrailer.key}`
+      : null;
+
   } catch (error) {
     console.error("Failed to fetch trailer:", error);
     throw error;
@@ -35,8 +42,8 @@ export const fetchMovieTrailer = async (id) => {
 
 export const fetchMovieCredits = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/movie/${id}/credits`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}/credits`, {
+      params: { language: "en-US" },
     });
     return response.data;
   } catch (error) {
@@ -47,9 +54,8 @@ export const fetchMovieCredits = async (id) => {
 
 export const fetchPopularTvSeries = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/tv/popular`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
-    });
+    const response = await axios.get(`${BACKEND_BASE_URL}/tv/popular`
+    );
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch popular Tv Series", error);
@@ -59,8 +65,8 @@ export const fetchPopularTvSeries = async () => {
 
 export const fetchPopularMovies = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/movie/popular`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/movie/popular`, {
+      params: { language: "en-US" },
     });
     return response.data.results;
   } catch (error) {
@@ -71,8 +77,8 @@ export const fetchPopularMovies = async () => {
 
 export const fetchUpcomingMovies = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/movie/upcoming`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/movie/upcoming`, {
+      params: { language: "en-US" },
     });
     return response.data.results;
   } catch (error) {
@@ -83,8 +89,8 @@ export const fetchUpcomingMovies = async () => {
 
 export const fetchTvSeriesDetail = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tv/${id}`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}`, {
+      params: { language: "en-US" },
     });
     return response.data;
   } catch (error) {
@@ -92,11 +98,11 @@ export const fetchTvSeriesDetail = async (id) => {
     throw error;
   }
 };
-
+  
 export const fetchTvSeriesCredits = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tv/${id}/credits`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/credits`, {
+      params: { language: "en-US" },
     });
     return response.data;
   } catch (error) {
@@ -107,8 +113,8 @@ export const fetchTvSeriesCredits = async (id) => {
 
 export const fetchTvSeasons = async (id, seasonNumber) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tv/${id}/season/${seasonNumber}`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/seasons/`, {
+      params: { language: "en-US", seasonNumber: seasonNumber },
     });
     return response.data;
   } catch (error) {
@@ -119,8 +125,8 @@ export const fetchTvSeasons = async (id, seasonNumber) => {
 
 export const fetchTvTrailer = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tv/${id}/videos`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/trailer`, {
+      params: { language: "en-US" },
     });
     const videos = response.data.results;
     const officialTrailer = videos.find(
@@ -135,8 +141,8 @@ export const fetchTvTrailer = async (id) => {
 
 export const fetchCompanyDetail = async (companyId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/company/${companyId}`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/company/${companyId}`, {
+      params: { language: "en-US" },
     });
     return response.data;
   } catch (error) {
@@ -147,8 +153,8 @@ export const fetchCompanyDetail = async (companyId) => {
 
 export const fetchSimilar = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/movie/${id}/similar`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}/similar`, {
+      params: { language: "en-US" },
     });
     return response.data.results;
   } catch (error) {
@@ -159,8 +165,8 @@ export const fetchSimilar = async (id) => {
 
 export const fetchMovieReviews = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/movie/${id}/reviews`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}/reviews`, {
+      params: { language: "en-US" },
     });
     return response.data.results;
   } catch (error) {
@@ -356,8 +362,8 @@ export const getWatchList = async (mediaType = null) => {
 
 export const fetchActorData = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/person/${id}`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/people/${id}`, {
+      params: { language: "en-US" },
     });
     return response.data;
   } catch (error) {
@@ -368,8 +374,8 @@ export const fetchActorData = async (id) => {
 
 export const fetchActorMovieCredits = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/person/${id}/movie_credits`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/people/${id}/movie_credits`, {
+      params: { language: "en-US" },
     });
     return response.data.cast;
   } catch (error) {
@@ -380,8 +386,8 @@ export const fetchActorMovieCredits = async (id) => {
 
 export const fetchActorTvCredits = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/person/${id}/tv_credits`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/people/${id}/tv_credits`, {
+      params: { language: "en-US" },
     });
     return response.data.cast;
   } catch (error) {
@@ -389,11 +395,11 @@ export const fetchActorTvCredits = async (id) => {
     throw error;
   }
 };
-
+// Look at this, because it doesnt render in tv series detail page,
 export const fetchSimilarTvSeries = async (id) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tv/${id}/similar`, {
-      params: { api_key: TMDB_API_KEY, language: "en-US" },
+    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/similar`, {
+      params: { language: "en-US" },
     });
     return response.data.results;
   } catch (error) {
@@ -404,9 +410,8 @@ export const fetchSimilarTvSeries = async (id) => {
 
 export const searchMulti = async (query) => {
   try {
-    const response = await axios.get(`${BASE_URL}/search/multi`, {
+    const response = await axios.get(`${BACKEND_BASE_URL}/search`, {
       params: {
-        api_key: TMDB_API_KEY,
         query,
         language: 'en-US',
         include_adult: false,
@@ -421,8 +426,8 @@ export const searchMulti = async (query) => {
 
 export const fetchTrending = async (timeWindow) => {
   try {
-    const response = await axios.get(`${BASE_URL}/trending/all/${timeWindow}`, {
-      params: { api_key: TMDB_API_KEY, language: 'en-US' },
+    const response = await axios.get(`${BACKEND_BASE_URL}/trending`, {
+      params: { timeWindow: timeWindow, language: 'en-US' },
     });
     return response.data.results;
   } catch (error) {
@@ -438,19 +443,18 @@ export const fetchDiscoverMovie = async ({
   releaseYear = '',
 } = {}) => {
   try {
-    const response = await axios.get(`${BASE_URL}/discover/movie`, {
-      params: {
-        api_key: TMDB_API_KEY,
-        language: 'en-US',
-        sort_by: sortBy,
-        include_adult: false,
-        include_video: false,
-        page,
-        with_genres: genres,
-        primary_release_year: releaseYear,
-        with_watch_monetization_types: 'flatrate',
-      },
-    });
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/movie/discover`,
+      {
+        params: {
+          page,
+          sortBy,
+          genres,
+          releaseYear,
+        },
+      }
+    );
+
     return response.data.results;
   } catch (error) {
     console.error('Failed to fetch discover movies:', error);
@@ -460,8 +464,8 @@ export const fetchDiscoverMovie = async ({
 
 export const fetchGenres = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
-      params: { api_key: TMDB_API_KEY, language: 'en-US' },
+    const response = await axios.get(`${BACKEND_BASE_URL}/genre/movie`, {
+      params: {  language: 'en-US' },
     });
     return response.data.genres;
   } catch (error) {
@@ -469,24 +473,42 @@ export const fetchGenres = async () => {
     throw error;
   }
 };
-
-export const fetchGenresTv = async () => {
-  const response = await axios.get(`${BASE_URL}/genre/tv/list?api_key=${TMDB_API_KEY}&language=en-US`);
-  return response.data.genres;
+export const fetchGenresTV = async () => {
+  try {
+    const response = await axios.get(`${BACKEND_BASE_URL}/genre/tv`, {
+      params: {  language: 'en-US' },
+    });
+    return response.data.genres;
+  } catch (error) {
+    console.error('Failed to fetch genres:', error);
+    throw error;
+  }
 };
+// perdariau
+export const fetchDiscoverTV = async ({
+  page = 1,
+  sortBy = 'popularity.desc',
+  genres = '',
+  firstAirDate = '',
+} = {}) => {
+  try {
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/tv/discover`,
+      {
+        params: {
+          page,
+          sortBy,
+          genres,
+          firstAirDate,
+        },
+      }
+    );
 
-export const fetchDiscoverTV = async ({ page = 1, sortBy = 'popularity.desc', genres = '', releaseYear = '' }) => {
-  const response = await axios.get(`${BASE_URL}/discover/tv`, {
-    params: {
-      api_key: TMDB_API_KEY,
-      language: 'en-US',
-      sort_by: sortBy,
-      page,
-      with_genres: genres,
-      first_air_date_year: releaseYear,
-    },
-  });
-  return response.data.results;
+    return response.data.results;
+  } catch (error) {
+    console.error('Failed to fetch discover movies:', error);
+    throw error;
+  }
 };
 
 
