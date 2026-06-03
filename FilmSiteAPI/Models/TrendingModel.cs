@@ -10,4 +10,6 @@ public class TrendingModel
     public List<int> Genre_ids { get; set; } = new List<int>();
     public string Media_type { get; set; } = string.Empty;
 
+    public string Original_title { get; set; } = string.Empty;
+
 }
