@@ -33,7 +33,7 @@ function Search() {
   const handleSelect = (item) => {
     setOpen(false);
     setQuery('');
-    navigate(`/${item.media_type === 'tv' ? 'TvDetails' : 'MovieDetails'}/${item.id}`);
+    navigate(`/${item.media_type === 'tv' ? 'TvDetail' : 'MovieDetail'}/${item.id}`);
   };
 
   const handleKeyPress = (e) => {
