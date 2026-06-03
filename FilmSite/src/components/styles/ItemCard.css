@@ -36,8 +36,8 @@
 
 
 .flip-card {
-    width: 200px;
-    height: 300px;
+    width: 250px;
+    height: 350px;
     flex: 0 0 auto;
     background-color: transparent;
     perspective: 1000px;
@@ -177,7 +177,7 @@
     .scroll-button {
       padding: 8px 10px;
       font-size: 20px;
-      top: 45%; /
+      top: 45%; 
     }
   
     .scroll-button.left {

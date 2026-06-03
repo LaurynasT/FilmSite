@@ -484,7 +484,7 @@ export const fetchGenresTV = async () => {
     throw error;
   }
 };
-// perdariau
+
 export const fetchDiscoverTV = async ({
   page = 1,
   sortBy = 'popularity.desc',

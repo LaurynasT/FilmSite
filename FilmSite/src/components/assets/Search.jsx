@@ -1,7 +1,8 @@
+import SearchIcon from "../../Icons/search.png";
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { searchMulti } from '../Api/Api';
-import "../styles/Search.css";
+
 
 function Search() {
   const [query, setQuery] = useState('');
@@ -21,20 +22,21 @@ function Search() {
   };
 
   return (
-    <div className="search-container">
-      <h1>Search</h1>
-      <div className="search-bar-wrapper">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Search for a movie, TV show, or person..."
-        />
-        <button onClick={handleSearch}>Search</button>
-      </div>
+    <div className="relative flex items-center">
+      <img
+        src={SearchIcon}
+        alt="search"
+        className="absolute left-3 w-4 h-4 opacity-50"
+      />
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyPress={handleKeyPress}
+        placeholder="Search movies, TV shows..."
+        className="bg-zinc-900 text-zinc-300 border border-zinc-700 rounded-full pl-9 pr-4 py-1.5 w-64 text-sm focus:outline-none focus:border-zinc-500 transition-colors"
+      />
     </div>
   );
 }
-
 export default Search;
