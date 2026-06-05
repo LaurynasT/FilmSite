@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
-const BACKEND_BASE_URL = "http://localhost:5135/api";
+const BACKEND_BASE_URL = "http://filmsite-production-5017.up.railway.app/api";
 
 export const fetchMovieDetail = async (id) => {
   try {

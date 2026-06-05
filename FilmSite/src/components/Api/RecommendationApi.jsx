@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5135/api";
+const API_BASE_URL = "http://filmsite-production-5017.up.railway.app/api";
 
 export const getRecommendationsFromFavorites = async (mediaType) => {
   try {
