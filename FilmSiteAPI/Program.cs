@@ -13,8 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
-string? connectionString = builder.Configuration["DATABASE_URL"]
-    ?? builder.Configuration.GetConnectionString("default");
+string? connectionString = builder.Configuration.GetConnectionString("default");
 if (string.IsNullOrEmpty(connectionString))
     throw new InvalidOperationException("Connection string is not configured.");
 
