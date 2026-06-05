@@ -1,27 +1,29 @@
-import SearchIcon from "../../Icons/search.png";
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { searchMulti } from '../Api/Api';
+import SearchIcon from "../Icons/search.png";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { searchMulti } from "../Api/Api";
 
 function Search() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const ref = useRef();
 
-
   useEffect(() => {
     const handleClick = (e) => {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
     };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
- 
   useEffect(() => {
-    if (!query.trim()) { setResults([]); setOpen(false); return; }
+    if (!query.trim()) {
+      setResults([]);
+      setOpen(false);
+      return;
+    }
     const timeout = setTimeout(async () => {
       const data = await searchMulti(query);
       setResults(data?.slice(0, 6) || []);
@@ -32,21 +34,28 @@ function Search() {
 
   const handleSelect = (item) => {
     setOpen(false);
-    setQuery('');
-    navigate(`/${item.media_type === 'tv' ? 'TvDetail' : 'MovieDetail'}/${item.id}`);
+    setQuery("");
+    navigate(
+      `/${item.media_type === "tv" ? "TvSeriesDetail" : "MovieDetail"}/${item.id}`,
+    );
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && query.trim()) {
+    if (e.key === "Enter" && query.trim()) {
       setOpen(false);
-      navigate('/SearchResults', { state: { results: { results }, searchType: 'all' } });
+      navigate("/SearchResults", {
+        state: { results: { results }, searchType: "all" },
+      });
     }
   };
 
-
   return (
     <div className="relative flex items-center w-64" ref={ref}>
-      <img src={SearchIcon} alt="search" className="absolute left-3 w-4 h-4 opacity-50 z-10" />
+      <img
+        src={SearchIcon}
+        alt="search"
+        className="absolute left-3 w-4 h-4 opacity-50 z-10"
+      />
       <input
         type="text"
         value={query}
@@ -56,7 +65,6 @@ function Search() {
         className="bg-zinc-900 text-zinc-300 border border-zinc-700 rounded-full pl-9 pr-4 py-1.5 w-64 text-sm focus:outline-none focus:border-zinc-500 transition-colors"
       />
 
-     
       {open && results.length > 0 && (
         <div className="absolute top-10 left-0 w-full bg-zinc-900 border border-zinc-700 rounded-lg overflow-hidden z-50 shadow-xl">
           {results.map((item) => (
@@ -76,9 +84,15 @@ function Search() {
               )}
               <div className="">
                 <p className="text-white text-sm">{item.title || item.name}</p>
-                <p className="text-zinc-500 text-xs capitalize">{item.media_type}</p>
-                <p className="text-zinc-500 text-xs">{item.release_date?.slice(0, 4)}</p>
-                <p className="text-zinc-500 text-xs">{item.vote_average?.toFixed(1)}</p>
+                <p className="text-zinc-500 text-xs capitalize">
+                  {item.media_type}
+                </p>
+                <p className="text-zinc-500 text-xs">
+                  {item.release_date?.slice(0, 4)}
+                </p>
+                <p className="text-zinc-500 text-xs">
+                  {item.vote_average?.toFixed(1)}
+                </p>
               </div>
             </div>
           ))}

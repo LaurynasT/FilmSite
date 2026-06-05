@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchActorData, fetchActorMovieCredits, fetchActorTvCredits } from "../Api/Api";
+import {
+  fetchActorData,
+  fetchActorMovieCredits,
+  fetchActorTvCredits,
+} from "../Api/Api";
 import "../styles/ActorPage.css";
 
 const ActorPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [actor, setActor] = useState(null);
   const [movieCredits, setMovieCredits] = useState([]);
   const [tvCredits, setTvCredits] = useState([]);
@@ -34,8 +38,8 @@ const ActorPage = () => {
   if (!actor) return <div className="actor-page">Loading actor data...</div>;
 
   const handleCardClick = (item) => {
-    const mediaType = item.title ? "MovieDetail" : "TvSeriesDetail"; 
-    navigate(`/${mediaType}/${item.id}`); 
+    const mediaType = item.title ? "MovieDetail" : "TvSeriesDetail";
+    navigate(`/${mediaType}/${item.id}`);
   };
 
   return (
@@ -84,8 +88,8 @@ const ActorPage = () => {
           <div
             key={item.id}
             className="movie-card"
-            onClick={() => handleCardClick(item)} 
-            style={{ cursor: "pointer" }} 
+            onClick={() => handleCardClick(item)}
+            style={{ cursor: "pointer" }}
           >
             <img
               src={`https://image.tmdb.org/t/p/w500${item.poster_Path}`}

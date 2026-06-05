@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const BACKEND_BASE_URL = "http://localhost:5135/api";
 
@@ -18,22 +17,17 @@ export const fetchMovieDetail = async (id) => {
 
 export const fetchMovieTrailer = async (id) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/movie/${id}/trailer`
-    );
+    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}/trailer`);
 
     const videos = response.data.results;
 
     const officialTrailer = videos.find(
-      (video) =>
-        video.type === "Trailer" &&
-        video.site === "YouTube"
+      (video) => video.type === "Trailer" && video.site === "YouTube",
     );
 
     return officialTrailer
       ? `https://www.youtube.com/embed/${officialTrailer.key}`
       : null;
-
   } catch (error) {
     console.error("Failed to fetch trailer:", error);
     throw error;
@@ -42,9 +36,12 @@ export const fetchMovieTrailer = async (id) => {
 
 export const fetchMovieCredits = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}/credits`, {
-      params: { language: "en-US" },
-    });
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/movie/${id}/credits`,
+      {
+        params: { language: "en-US" },
+      },
+    );
     return response.data;
   } catch (error) {
     console.error("Failed to fetch movie credits:", error);
@@ -54,8 +51,7 @@ export const fetchMovieCredits = async (id) => {
 
 export const fetchPopularTvSeries = async () => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/tv/popular`
-    );
+    const response = await axios.get(`${BACKEND_BASE_URL}/tv/popular`);
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch popular Tv Series", error);
@@ -98,7 +94,7 @@ export const fetchTvSeriesDetail = async (id) => {
     throw error;
   }
 };
-  
+
 export const fetchTvSeriesCredits = async (id) => {
   try {
     const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/credits`, {
@@ -130,9 +126,11 @@ export const fetchTvTrailer = async (id) => {
     });
     const videos = response.data.results;
     const officialTrailer = videos.find(
-      (video) => video.type === "Trailer" && video.site === "YouTube"
+      (video) => video.type === "Trailer" && video.site === "YouTube",
     );
-    return officialTrailer ? `https://www.youtube.com/embed/${officialTrailer.key}` : null;
+    return officialTrailer
+      ? `https://www.youtube.com/embed/${officialTrailer.key}`
+      : null;
   } catch (error) {
     console.error("Failed to fetch trailer:", error);
     throw error;
@@ -141,9 +139,12 @@ export const fetchTvTrailer = async (id) => {
 
 export const fetchCompanyDetail = async (companyId) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/company/${companyId}`, {
-      params: { language: "en-US" },
-    });
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/company/${companyId}`,
+      {
+        params: { language: "en-US" },
+      },
+    );
     return response.data;
   } catch (error) {
     console.error("Failed to fetch company details", error);
@@ -153,9 +154,12 @@ export const fetchCompanyDetail = async (companyId) => {
 
 export const fetchSimilar = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}/similar`, {
-      params: { language: "en-US" },
-    });
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/movie/${id}/similar`,
+      {
+        params: { language: "en-US" },
+      },
+    );
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch similar movies", error);
@@ -165,9 +169,12 @@ export const fetchSimilar = async (id) => {
 
 export const fetchMovieReviews = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}/reviews`, {
-      params: { language: "en-US" },
-    });
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/movie/${id}/reviews`,
+      {
+        params: { language: "en-US" },
+      },
+    );
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch movie reviews", error);
@@ -186,7 +193,7 @@ export const loginUser = async ({ username, password }) => {
       {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
-      }
+      },
     );
     return response.data;
   } catch (error) {
@@ -228,7 +235,7 @@ export const updateUsername = async (newName) => {
       {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
-      }
+      },
     );
     return response.data;
   } catch (error) {
@@ -270,7 +277,7 @@ export const addFavorite = async (mediaId, mediaType, title, posterPath) => {
     const response = await axios.post(
       `${BACKEND_BASE_URL}/favorites/add`,
       { mediaId, mediaType, title, posterPath },
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return response.data;
   } catch (error) {
@@ -283,7 +290,7 @@ export const removeFavorite = async (mediaId, mediaType) => {
   try {
     const response = await axios.delete(
       `${BACKEND_BASE_URL}/favorites/remove?mediaId=${mediaId}&mediaType=${mediaType}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return response.data;
   } catch (error) {
@@ -296,7 +303,7 @@ export const checkFavorite = async (mediaId, mediaType) => {
   try {
     const response = await axios.get(
       `${BACKEND_BASE_URL}/favorites/check?mediaId=${mediaId}&mediaType=${mediaType}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return response.data.isFavorite;
   } catch (error) {
@@ -309,7 +316,7 @@ export const checkWatchList = async (mediaId, mediaType) => {
   try {
     const response = await axios.get(
       `${BACKEND_BASE_URL}/WatchList/check?mediaId=${mediaId}&mediaType=${mediaType}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return response.data.isInWatchList;
   } catch (error) {
@@ -323,7 +330,7 @@ export const addToWatchList = async (mediaId, mediaType, title, posterPath) => {
     const response = await axios.post(
       `${BACKEND_BASE_URL}/WatchList/add`,
       { mediaId, mediaType, title, posterPath },
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return response.data;
   } catch (error) {
@@ -336,7 +343,7 @@ export const removeFromWatchList = async (mediaId, mediaType) => {
   try {
     const response = await axios.delete(
       `${BACKEND_BASE_URL}/WatchList/remove?mediaId=${mediaId}&mediaType=${mediaType}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return response.data;
   } catch (error) {
@@ -374,9 +381,12 @@ export const fetchActorData = async (id) => {
 
 export const fetchActorMovieCredits = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/people/${id}/movie_credits`, {
-      params: { language: "en-US" },
-    });
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/people/${id}/movie_credits`,
+      {
+        params: { language: "en-US" },
+      },
+    );
     return response.data.cast;
   } catch (error) {
     console.error("Failed to fetch movie credits:", error);
@@ -386,9 +396,12 @@ export const fetchActorMovieCredits = async (id) => {
 
 export const fetchActorTvCredits = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/people/${id}/tv_credits`, {
-      params: { language: "en-US" },
-    });
+    const response = await axios.get(
+      `${BACKEND_BASE_URL}/people/${id}/tv_credits`,
+      {
+        params: { language: "en-US" },
+      },
+    );
     return response.data.cast;
   } catch (error) {
     console.error("Failed to fetch TV credits:", error);
@@ -413,13 +426,13 @@ export const searchMulti = async (query) => {
     const response = await axios.get(`${BACKEND_BASE_URL}/search`, {
       params: {
         query,
-        language: 'en-US',
+        language: "en-US",
         include_adult: false,
       },
     });
     return response.data.results;
   } catch (error) {
-    console.error('Error fetching search results:', error);
+    console.error("Error fetching search results:", error);
     return [];
   }
 };
@@ -427,37 +440,34 @@ export const searchMulti = async (query) => {
 export const fetchTrending = async (timeWindow) => {
   try {
     const response = await axios.get(`${BACKEND_BASE_URL}/trending`, {
-      params: { timeWindow: timeWindow, language: 'en-US' },
+      params: { timeWindow: timeWindow, language: "en-US" },
     });
     return response.data.results;
   } catch (error) {
-    console.error('Failed to fetch trending media:', error);
+    console.error("Failed to fetch trending media:", error);
     throw error;
   }
 };
 
 export const fetchDiscoverMovie = async ({
   page = 1,
-  sortBy = 'popularity.desc',
-  genres = '',
-  releaseYear = '',
+  sortBy = "popularity.desc",
+  genres = "",
+  releaseYear = "",
 } = {}) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/movie/discover`,
-      {
-        params: {
-          page,
-          sortBy,
-          genres,
-          releaseYear,
-        },
-      }
-    );
+    const response = await axios.get(`${BACKEND_BASE_URL}/movie/discover`, {
+      params: {
+        page,
+        sortBy,
+        genres,
+        releaseYear,
+      },
+    });
 
     return response.data.results;
   } catch (error) {
-    console.error('Failed to fetch discover movies:', error);
+    console.error("Failed to fetch discover movies:", error);
     throw error;
   }
 };
@@ -465,52 +475,47 @@ export const fetchDiscoverMovie = async ({
 export const fetchGenres = async () => {
   try {
     const response = await axios.get(`${BACKEND_BASE_URL}/genre/movie`, {
-      params: {  language: 'en-US' },
+      params: { language: "en-US" },
     });
     return response.data.genres;
   } catch (error) {
-    console.error('Failed to fetch genres:', error);
+    console.error("Failed to fetch genres:", error);
     throw error;
   }
 };
 export const fetchGenresTV = async () => {
   try {
     const response = await axios.get(`${BACKEND_BASE_URL}/genre/tv`, {
-      params: {  language: 'en-US' },
+      params: { language: "en-US" },
     });
     return response.data.genres;
   } catch (error) {
-    console.error('Failed to fetch genres:', error);
+    console.error("Failed to fetch genres:", error);
     throw error;
   }
 };
 
 export const fetchDiscoverTV = async ({
   page = 1,
-  sortBy = 'popularity.desc',
-  genres = '',
-  firstAirDate = '',
+  sortBy = "popularity.desc",
+  genres = "",
+  firstAirDate = "",
 } = {}) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/tv/discover`,
-      {
-        params: {
-          page,
-          sortBy,
-          genres,
-          firstAirDate,
-        },
-      }
-    );
+    const response = await axios.get(`${BACKEND_BASE_URL}/tv/discover`, {
+      params: {
+        page,
+        sortBy,
+        genres,
+        firstAirDate,
+      },
+    });
 
     return response.data.results;
   } catch (error) {
-    console.error('Failed to fetch discover movies:', error);
+    console.error("Failed to fetch discover movies:", error);
     throw error;
   }
 };
-
-
 
 export { IMAGE_BASE_URL };

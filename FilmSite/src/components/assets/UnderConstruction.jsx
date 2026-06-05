@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-
 export default function UnderConstructionModal() {
   const [open, setOpen] = useState(false);
 
@@ -20,23 +19,24 @@ export default function UnderConstructionModal() {
 
   const handleClose = () => {
     setOpen(false);
-    document.body.style.overflow = "auto"; 
+    document.body.style.overflow = "auto";
   };
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-[90%] max-w-md rounded-xl bg-white p-6 text-center shadow-xl">
-        <h2 className="text-xl font-bold">🚧 Under Construction</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
+      <div className="w-[90%] max-w-md rounded-xl bg-black p-6 text-center shadow-xl border border-2 border-red">
+        <h2 className="text-xl font-bold text-white">🚧 Under Construction</h2>
 
-        <p className="mt-3 text-gray-600">
-          Some pages may have a different design while updates are being completed.
+        <p className="mt-3 text-white">
+          Some pages may have a different design while updates are being
+          completed.
         </p>
 
         <button
           onClick={handleClose}
-          className="mt-5 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="mt-5 rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
         >
           Continue
         </button>
