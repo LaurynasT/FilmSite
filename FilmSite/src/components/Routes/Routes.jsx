@@ -4,7 +4,7 @@ import { AuthProvider } from "../assets/AuthContext";
 import PrivateRoute from "../assets/PrivateRoute";
 import Dashboard from "../Pages/Dashboard";
 import Login from "../Pages/Login";
-import Signup from "../pages/Signup";
+import Signup from "../Pages/Signup.jsx";
 import Logout from "../assets/Logout";
 import HomePage from "../pages/HomePage";
 import AiSearch from "../Pages/AiSearch";
