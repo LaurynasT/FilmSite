@@ -58,7 +58,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-var allowedOrigin = builder.Configuration["CORS__AllowedOrigin"]
+var allowedOrigin = builder.Configuration["CORS_AllowedOrigin"]
     ?? throw new InvalidOperationException("CORS origin is not configured.");
 
 builder.Services.AddCors(options =>
