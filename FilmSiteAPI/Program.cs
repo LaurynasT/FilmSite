@@ -10,38 +10,31 @@ using NetRefreshTokenDemo.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
-
-
-
-string? connectionString = builder.Configuration.GetConnectionString("default");
+string? connectionString = builder.Configuration["DATABASE_URL"]
+    ?? builder.Configuration.GetConnectionString("default");
 if (string.IsNullOrEmpty(connectionString))
-{
-    throw new InvalidOperationException("Connection string 'default' is not configured.");
-}
-
+    throw new InvalidOperationException("Connection string is not configured.");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-                          options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
-
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
 {
     options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
+    options.RequireHttpsMetadata = true; 
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -49,10 +42,11 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JWT:ValidAudience"],
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:secret"] ?? throw new InvalidOperationException("JWT secret is missing")))
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["JWT:secret"]
+                ?? throw new InvalidOperationException("JWT secret is missing")))
     };
 
-    // Add this event handler to extract token from cookies
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -63,30 +57,23 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+var allowedOrigin = builder.Configuration["CORS__AllowedOrigin"]
+    ?? throw new InvalidOperationException("CORS origin is not configured.");
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy
-            .AllowAnyOrigin() // For testing only - in production use specific origins
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-
     options.AddPolicy("AllowCredentials", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3000", "http://192.168.1.207:3000", "http://localhost:5173", "http://192.168.1.207:5173")
+            .WithOrigins(allowedOrigin)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
 
-
 builder.Services.AddAuthorization();
-
-
 builder.Services.AddControllers();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddHttpClient<IOpenAIService, OpenAIService>();
@@ -101,7 +88,6 @@ builder.Services.AddHttpClient<ITmdbCompanyInterface, TmdbCompanyService>();
 
 var app = builder.Build();
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -109,12 +95,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseCors("AllowCredentials");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-
 
 try
 {
