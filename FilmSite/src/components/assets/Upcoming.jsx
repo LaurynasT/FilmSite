@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { fetchUpcomingMovies, IMAGE_BASE_URL } from "../Api/Api";
 import { useNavigate } from "react-router-dom";
-import MovieCard from "../compound/ItemCard";
+import MovieCard from "../Compound/ItemCard";
 
 const UpcomingMovies = () => {
   const [upcoming, setUpcomingMovies] = useState([]);
