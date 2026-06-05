@@ -1,5 +1,5 @@
 .footer {
-  margin-top: auto; 
+  margin-top: auto;
   background-color: #111;
   color: #ccc;
   padding: 40px 20px 20px;
@@ -62,12 +62,11 @@
   font-size: 13px;
 }
 
-
 @media screen and (max-width: 480px) {
   .footer {
     padding: 30px 15px 15px;
   }
-  
+
   .footer-section {
     min-width: 100%;
     margin: 15px 0;

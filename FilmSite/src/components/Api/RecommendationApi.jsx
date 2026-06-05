@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_BASE_URL = "http://localhost:5135/api";
 
@@ -9,17 +9,24 @@ export const getRecommendationsFromFavorites = async (mediaType) => {
       withCredentials: true,
     });
 
-    if (response.data.recommendations && response.data.recommendations.length > 0) {
-      const hasIds = response.data.recommendations.some(rec => rec.id);
+    if (
+      response.data.recommendations &&
+      response.data.recommendations.length > 0
+    ) {
+      const hasIds = response.data.recommendations.some((rec) => rec.id);
       if (!hasIds) {
-        console.warn('Recommendations do not have IDs. Details navigation may not work.');
+        console.warn(
+          "Recommendations do not have IDs. Details navigation may not work.",
+        );
       }
     }
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching recommendations:', error);
-    throw error.response?.data || error.message || 'Failed to get recommendations';
+    console.error("Error fetching recommendations:", error);
+    throw (
+      error.response?.data || error.message || "Failed to get recommendations"
+    );
   }
 };
 
@@ -31,8 +38,8 @@ export const getUserFavorites = async (mediaType) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching favorites:', error);
-    throw error.response?.data || error.message || 'Failed to get favorites';
+    console.error("Error fetching favorites:", error);
+    throw error.response?.data || error.message || "Failed to get favorites";
   }
 };
 
@@ -49,17 +56,26 @@ export const getRecommendationsFromText = async (prompt, mediaType) => {
 
     console.log("Sending payload:", payload);
 
-    const response = await axios.post(`${API_BASE_URL}/recommendations/text`, payload, {
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await axios.post(
+      `${API_BASE_URL}/recommendations/text`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
       },
-      withCredentials: true,
-    });
+    );
 
-    if (response.data.recommendations && response.data.recommendations.length > 0) {
-      const hasIds = response.data.recommendations.some(rec => rec.id);
+    if (
+      response.data.recommendations &&
+      response.data.recommendations.length > 0
+    ) {
+      const hasIds = response.data.recommendations.some((rec) => rec.id);
       if (!hasIds) {
-        console.warn('Recommendations do not have IDs. Details navigation may not work.');
+        console.warn(
+          "Recommendations do not have IDs. Details navigation may not work.",
+        );
       }
     }
 
@@ -73,17 +89,18 @@ export const getRecommendationsFromText = async (prompt, mediaType) => {
       console.error("Response status:", error.response.status);
     }
 
-    throw error.response?.data || error.message || 'Failed to get recommendations';
+    throw (
+      error.response?.data || error.message || "Failed to get recommendations"
+    );
   }
 };
-
 
 export const getMediaDetailsUrl = (mediaId, mediaType) => {
   if (!mediaId) return null;
 
-  if (mediaType === 'movie') {
+  if (mediaType === "movie") {
     return `/movie/${mediaId}`;
-  } else if (mediaType === 'tv') {
+  } else if (mediaType === "tv") {
     return `/tv/${mediaId}`;
   } else {
     return `/media/${mediaId}`;
@@ -94,7 +111,7 @@ export const RecommendationService = {
   getRecommendationsFromFavorites,
   getUserFavorites,
   getRecommendationsFromText,
-  getMediaDetailsUrl
+  getMediaDetailsUrl,
 };
 
 export default RecommendationService;

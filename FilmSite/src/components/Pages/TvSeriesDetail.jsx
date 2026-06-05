@@ -7,7 +7,7 @@ import {
   fetchTvTrailer,
   fetchSimilarTvSeries,
 } from "../Api/Api";
-import FavoriteButton from "../assets/FavoriteButton";
+import FavoriteButton from "../assets/FavoriteButton.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/TvseriesDetail.css";
 import "react-toastify/dist/ReactToastify.css";

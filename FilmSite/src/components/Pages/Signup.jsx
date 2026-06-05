@@ -1,90 +1,149 @@
-import React, { useState } from "react";
+import React from "react";
 import { registerUser } from "../Api/Api";
 import { useNavigate } from "react-router-dom";
-import "../styles/Register.css";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import BackgroundImage from "../Icons/LoginBackground.png";
+import Google from "../Icons/google.svg";
+import Facebook from "../Icons/Facebook.png";
+
+const SignupSchema = z
+  .object({
+    name: z.string().min(3, "Username must be at least 3 characters long"),
+    email: z.string().email("Invalid email address"),
+    password: z
+      .string()
+      .min(
+        6,
+        "Password must be at least 6 characters long, have a number, and a special character",
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 const Signup = () => {
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "" });
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+  } = useForm({
+    resolver: zodResolver(SignupSchema),
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setError("");
-
- 
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
+  const onSubmit = async (data) => {
     try {
-      const data = await registerUser(form);
-      setMessage("Signup successful! You can now log in.");
-      setForm({ name: "", email: "", password: "", confirmPassword: "" });
-
+      await registerUser(data);
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      console.error("Signup failed:", err);
-      setError(err.response?.data?.message || "Signup failed.");
+      setError("root", {
+        message: err.response?.data?.message || "Signup failed.",
+      });
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-section">
-        <h2>Signup</h2>
-        <form onSubmit={handleSubmit} className="auth-form">
+    <div
+      className="min-h-screen w-full flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${BackgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="absolute inset-0 bg-black/60" />
+
+      <div className="relative z-10 w-full max-w-md mx-auto p-8 bg-black/70 rounded-lg shadow-lg backdrop-blur-sm">
+        <h2 className="text-white text-2xl font-bold mb-2 text-center">
+          Create your account
+        </h2>
+        <h2 className="text-red-500 text-xs font-bold mb-6 text-center">
+          Join our community and start your journey
+        </h2>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <input
-            name="name"
+            {...register("name")}
             type="text"
             placeholder="Username"
-            value={form.name}
-            onChange={handleChange}
-            required
+            className="w-full p-2 border border-gray-600 rounded bg-white/10 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-red-500"
           />
+          {errors.name && (
+            <p className="text-red-500 text-sm">{errors.name.message}</p>
+          )}
+
           <input
-            name="email"
+            {...register("email")}
             type="email"
             placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            required
+            className="w-full p-2 border border-gray-600 rounded bg-white/10 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-red-500"
           />
-          <div className="password-wrapper">
-            <input
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
-            
-          </div>
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
 
-          <div className="password-wrapper">
-            <input
-              name="confirmPassword"
-              type="password"
-              placeholder="Confirm Password"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <input
+            {...register("password")}
+            type="password"
+            placeholder="Password"
+            className="w-full p-2 border border-gray-600 rounded bg-white/10 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-red-500"
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
 
-          <button type="submit">Signup</button>
+          <input
+            {...register("confirmPassword")}
+            type="password"
+            placeholder="Confirm Password"
+            className="w-full p-2 border border-gray-600 rounded bg-white/10 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-red-500"
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-sm">
+              {errors.confirmPassword.message}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded transition disabled:opacity-50"
+          >
+            {isSubmitting ? "Signing up..." : "Sign Up"}
+          </button>
+          <div className="flex items-center gap-3 my-2">
+            <div className="flex-1 h-px bg-gray-600" />
+            <span className="text-gray-400 text-sm">Or</span>
+            <div className="flex-1 h-px bg-gray-600" />
+          </div>
+          <button className="w-full bg-red-600 hover:bg-blue-700 text-white py-2 rounded transition flex items-center justify-center gap-2">
+            <img src={Google} alt="Google" className="w-5 h-5" />
+            <span>Sign up with Google</span>
+          </button>
+
+          <button className="w-full bg-red-600 hover:bg-blue-700 text-white py-2 rounded transition flex items-center justify-center gap-2">
+            <img src={Facebook} alt="Facebook" className="w-5 h-5" />
+            <span>Sign up with Facebook</span>
+          </button>
         </form>
 
-        {message && <p className="auth-success">{message}</p>}
-        {error && <p className="auth-error">{error}</p>}
+        {errors.root && (
+          <p className="text-red-500 text-sm text-center mt-2">
+            {errors.root.message}
+          </p>
+        )}
+
+        {isSubmitSuccessful && !errors.root && (
+          <p className="text-green-500 text-sm text-center mt-2">
+            Signup successful! Redirecting to login...
+          </p>
+        )}
       </div>
     </div>
   );

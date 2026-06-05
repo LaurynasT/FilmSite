@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { fetchDiscoverTV, fetchGenres } from '../Api/Api';
-import { useNavigate } from 'react-router-dom';
-import '../styles/DiscoverTv.css';
-
+import React, { useState, useEffect } from "react";
+import { fetchDiscoverTV, fetchGenres } from "../Api/Api";
+import { useNavigate } from "react-router-dom";
+import "../styles/DiscoverTv.css";
 
 const DiscoverTVShowsPage = () => {
   const [shows, setShows] = useState([]);
   const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
-  const [releaseYear, setReleaseYear] = useState('');
-  const [sortBy, setSortBy] = useState('popularity.desc');
+  const [releaseYear, setReleaseYear] = useState("");
+  const [sortBy, setSortBy] = useState("popularity.desc");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ const DiscoverTVShowsPage = () => {
       const tvData = await fetchDiscoverTV({
         page,
         sortBy,
-        genres: selectedGenres.join(','),
+        genres: selectedGenres.join(","),
         releaseYear,
       });
       setShows(tvData);
@@ -39,7 +38,9 @@ const DiscoverTVShowsPage = () => {
 
   const toggleGenre = (genreId) => {
     setSelectedGenres((prev) =>
-      prev.includes(genreId) ? prev.filter((id) => id !== genreId) : [...prev, genreId]
+      prev.includes(genreId)
+        ? prev.filter((id) => id !== genreId)
+        : [...prev, genreId],
     );
   };
 
@@ -73,7 +74,7 @@ const DiscoverTVShowsPage = () => {
                 <button
                   key={genre.id}
                   onClick={() => toggleGenre(genre.id)}
-                  className={`genre-button ${selectedGenres.includes(genre.id) ? 'selected' : ''}`}
+                  className={`genre-button ${selectedGenres.includes(genre.id) ? "selected" : ""}`}
                 >
                   {genre.name}
                 </button>
@@ -122,7 +123,7 @@ const DiscoverTVShowsPage = () => {
             <button onClick={() => setPage(page - 1)} disabled={page <= 1}>
               Previous
             </button>
-            <span >Page {page}</span>
+            <span>Page {page}</span>
             <button onClick={() => setPage(page + 1)}>Next</button>
           </div>
         </div>
