@@ -160,7 +160,7 @@ public class AuthController : ControllerBase
                 Expires = DateTime.UtcNow.AddDays(7)
             });
 
-            return Ok("Login successful");
+           return Ok(new { accessToken = token, refreshToken = refreshToken });
         }
         catch (Exception ex)
         {
@@ -221,7 +221,7 @@ public class AuthController : ControllerBase
             user.RefreshToken = string.Empty;
             await _context.SaveChangesAsync();
 
-            // Clear cookies
+            
             Response.Cookies.Delete("accessToken", new CookieOptions
             {
                 Path = "/",

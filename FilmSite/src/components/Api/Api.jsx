@@ -1,11 +1,11 @@
+import axiosInstance, { setTokens, clearTokens, BACKEND_BASE_URL } from "./axiosInstance";
 import axios from "axios";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
-const BACKEND_BASE_URL = "https://filmsite-production-5017.up.railway.app/api";
 
 export const fetchMovieDetail = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}`, {
+    const response = await axiosInstance.get(`/movie/${id}`, {
       params: { language: "en-US" },
     });
     return response.data;
@@ -17,14 +17,11 @@ export const fetchMovieDetail = async (id) => {
 
 export const fetchMovieTrailer = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/movie/${id}/trailer`);
-
+    const response = await axiosInstance.get(`/movie/${id}/trailer`);
     const videos = response.data.results;
-
     const officialTrailer = videos.find(
       (video) => video.type === "Trailer" && video.site === "YouTube",
     );
-
     return officialTrailer
       ? `https://www.youtube.com/embed/${officialTrailer.key}`
       : null;
@@ -36,12 +33,9 @@ export const fetchMovieTrailer = async (id) => {
 
 export const fetchMovieCredits = async (id) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/movie/${id}/credits`,
-      {
-        params: { language: "en-US" },
-      },
-    );
+    const response = await axiosInstance.get(`/movie/${id}/credits`, {
+      params: { language: "en-US" },
+    });
     return response.data;
   } catch (error) {
     console.error("Failed to fetch movie credits:", error);
@@ -51,7 +45,7 @@ export const fetchMovieCredits = async (id) => {
 
 export const fetchPopularTvSeries = async () => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/tv/popular`);
+    const response = await axiosInstance.get(`/tv/popular`);
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch popular Tv Series", error);
@@ -61,7 +55,7 @@ export const fetchPopularTvSeries = async () => {
 
 export const fetchPopularMovies = async () => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/movie/popular`, {
+    const response = await axiosInstance.get(`/movie/popular`, {
       params: { language: "en-US" },
     });
     return response.data.results;
@@ -73,7 +67,7 @@ export const fetchPopularMovies = async () => {
 
 export const fetchUpcomingMovies = async () => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/movie/upcoming`, {
+    const response = await axiosInstance.get(`/movie/upcoming`, {
       params: { language: "en-US" },
     });
     return response.data.results;
@@ -85,7 +79,7 @@ export const fetchUpcomingMovies = async () => {
 
 export const fetchTvSeriesDetail = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}`, {
+    const response = await axiosInstance.get(`/tv/${id}`, {
       params: { language: "en-US" },
     });
     return response.data;
@@ -97,7 +91,7 @@ export const fetchTvSeriesDetail = async (id) => {
 
 export const fetchTvSeriesCredits = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/credits`, {
+    const response = await axiosInstance.get(`/tv/${id}/credits`, {
       params: { language: "en-US" },
     });
     return response.data;
@@ -109,7 +103,7 @@ export const fetchTvSeriesCredits = async (id) => {
 
 export const fetchTvSeasons = async (id, seasonNumber) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/seasons/`, {
+    const response = await axiosInstance.get(`/tv/${id}/seasons/`, {
       params: { language: "en-US", seasonNumber: seasonNumber },
     });
     return response.data;
@@ -121,7 +115,7 @@ export const fetchTvSeasons = async (id, seasonNumber) => {
 
 export const fetchTvTrailer = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/trailer`, {
+    const response = await axiosInstance.get(`/tv/${id}/trailer`, {
       params: { language: "en-US" },
     });
     const videos = response.data.results;
@@ -139,12 +133,9 @@ export const fetchTvTrailer = async (id) => {
 
 export const fetchCompanyDetail = async (companyId) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/company/${companyId}`,
-      {
-        params: { language: "en-US" },
-      },
-    );
+    const response = await axiosInstance.get(`/company/${companyId}`, {
+      params: { language: "en-US" },
+    });
     return response.data;
   } catch (error) {
     console.error("Failed to fetch company details", error);
@@ -154,12 +145,9 @@ export const fetchCompanyDetail = async (companyId) => {
 
 export const fetchSimilar = async (id) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/movie/${id}/similar`,
-      {
-        params: { language: "en-US" },
-      },
-    );
+    const response = await axiosInstance.get(`/movie/${id}/similar`, {
+      params: { language: "en-US" },
+    });
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch similar movies", error);
@@ -169,12 +157,9 @@ export const fetchSimilar = async (id) => {
 
 export const fetchMovieReviews = async (id) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/movie/${id}/reviews`,
-      {
-        params: { language: "en-US" },
-      },
-    );
+    const response = await axiosInstance.get(`/movie/${id}/reviews`, {
+      params: { language: "en-US" },
+    });
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch movie reviews", error);
@@ -184,17 +169,12 @@ export const fetchMovieReviews = async (id) => {
 
 export const loginUser = async ({ username, password }) => {
   try {
-    const response = await axios.post(
-      `${BACKEND_BASE_URL}/auth/login`,
-      {
-        Username: username,
-        Password: password,
-      },
-      {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      },
-    );
+    // Use plain axios here since we don't have a token yet
+    const response = await axios.post(`${BACKEND_BASE_URL}/auth/login`, {
+      Username: username,
+      Password: password,
+    });
+    setTokens(response.data.accessToken, response.data.refreshToken);
     return response.data;
   } catch (error) {
     console.error("Login failed:", error.response?.data || error.message);
@@ -218,9 +198,8 @@ export const registerUser = async ({ name, email, password }) => {
 
 export const logoutUser = async () => {
   try {
-    await axios.post(`${BACKEND_BASE_URL}/auth/token/revoke`, null, {
-      withCredentials: true,
-    });
+    await axiosInstance.post(`/auth/token/revoke`);
+    clearTokens();
   } catch (error) {
     console.error("Logout failed:", error);
     throw error;
@@ -229,14 +208,9 @@ export const logoutUser = async () => {
 
 export const updateUsername = async (newName) => {
   try {
-    const response = await axios.put(
-      `${BACKEND_BASE_URL}/auth/updatename`,
-      { NewName: newName },
-      {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      },
-    );
+    const response = await axiosInstance.put(`/auth/updatename`, {
+      NewName: newName,
+    });
     return response.data;
   } catch (error) {
     console.error("Error updating username:", error);
@@ -246,9 +220,7 @@ export const updateUsername = async (newName) => {
 
 export const fetchUserData = async () => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/auth/getuser`, {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.get(`/auth/getuser`);
     return response.data;
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -258,12 +230,8 @@ export const fetchUserData = async () => {
 
 export const getFavorites = async (mediaType = null) => {
   try {
-    let url = `${BACKEND_BASE_URL}/favorites`;
-    if (mediaType) {
-      url += `?mediaType=${mediaType}`;
-    }
-    const response = await axios.get(url, {
-      withCredentials: true,
+    const response = await axiosInstance.get(`/favorites`, {
+      params: mediaType ? { mediaType } : {},
     });
     return response.data;
   } catch (error) {
@@ -274,11 +242,9 @@ export const getFavorites = async (mediaType = null) => {
 
 export const addFavorite = async (mediaId, mediaType, title, posterPath) => {
   try {
-    const response = await axios.post(
-      `${BACKEND_BASE_URL}/favorites/add`,
-      { mediaId, mediaType, title, posterPath },
-      { withCredentials: true },
-    );
+    const response = await axiosInstance.post(`/favorites/add`, {
+      mediaId, mediaType, title, posterPath,
+    });
     return response.data;
   } catch (error) {
     console.error("Error adding favorite:", error);
@@ -288,9 +254,8 @@ export const addFavorite = async (mediaId, mediaType, title, posterPath) => {
 
 export const removeFavorite = async (mediaId, mediaType) => {
   try {
-    const response = await axios.delete(
-      `${BACKEND_BASE_URL}/favorites/remove?mediaId=${mediaId}&mediaType=${mediaType}`,
-      { withCredentials: true },
+    const response = await axiosInstance.delete(
+      `/favorites/remove?mediaId=${mediaId}&mediaType=${mediaType}`,
     );
     return response.data;
   } catch (error) {
@@ -301,9 +266,8 @@ export const removeFavorite = async (mediaId, mediaType) => {
 
 export const checkFavorite = async (mediaId, mediaType) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/favorites/check?mediaId=${mediaId}&mediaType=${mediaType}`,
-      { withCredentials: true },
+    const response = await axiosInstance.get(
+      `/favorites/check?mediaId=${mediaId}&mediaType=${mediaType}`,
     );
     return response.data.isFavorite;
   } catch (error) {
@@ -314,9 +278,8 @@ export const checkFavorite = async (mediaId, mediaType) => {
 
 export const checkWatchList = async (mediaId, mediaType) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/WatchList/check?mediaId=${mediaId}&mediaType=${mediaType}`,
-      { withCredentials: true },
+    const response = await axiosInstance.get(
+      `/WatchList/check?mediaId=${mediaId}&mediaType=${mediaType}`,
     );
     return response.data.isInWatchList;
   } catch (error) {
@@ -327,11 +290,9 @@ export const checkWatchList = async (mediaId, mediaType) => {
 
 export const addToWatchList = async (mediaId, mediaType, title, posterPath) => {
   try {
-    const response = await axios.post(
-      `${BACKEND_BASE_URL}/WatchList/add`,
-      { mediaId, mediaType, title, posterPath },
-      { withCredentials: true },
-    );
+    const response = await axiosInstance.post(`/WatchList/add`, {
+      mediaId, mediaType, title, posterPath,
+    });
     return response.data;
   } catch (error) {
     console.error("Error adding to watch list:", error);
@@ -341,9 +302,8 @@ export const addToWatchList = async (mediaId, mediaType, title, posterPath) => {
 
 export const removeFromWatchList = async (mediaId, mediaType) => {
   try {
-    const response = await axios.delete(
-      `${BACKEND_BASE_URL}/WatchList/remove?mediaId=${mediaId}&mediaType=${mediaType}`,
-      { withCredentials: true },
+    const response = await axiosInstance.delete(
+      `/WatchList/remove?mediaId=${mediaId}&mediaType=${mediaType}`,
     );
     return response.data;
   } catch (error) {
@@ -354,11 +314,8 @@ export const removeFromWatchList = async (mediaId, mediaType) => {
 
 export const getWatchList = async (mediaType = null) => {
   try {
-    const url = mediaType
-      ? `${BACKEND_BASE_URL}/WatchList?mediaType=${mediaType}`
-      : `${BACKEND_BASE_URL}/WatchList`;
-    const response = await axios.get(url, {
-      withCredentials: true,
+    const response = await axiosInstance.get(`/WatchList`, {
+      params: mediaType ? { mediaType } : {},
     });
     return response.data;
   } catch (error) {
@@ -369,7 +326,7 @@ export const getWatchList = async (mediaType = null) => {
 
 export const fetchActorData = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/people/${id}`, {
+    const response = await axiosInstance.get(`/people/${id}`, {
       params: { language: "en-US" },
     });
     return response.data;
@@ -381,12 +338,9 @@ export const fetchActorData = async (id) => {
 
 export const fetchActorMovieCredits = async (id) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/people/${id}/movie_credits`,
-      {
-        params: { language: "en-US" },
-      },
-    );
+    const response = await axiosInstance.get(`/people/${id}/movie_credits`, {
+      params: { language: "en-US" },
+    });
     return response.data.cast;
   } catch (error) {
     console.error("Failed to fetch movie credits:", error);
@@ -396,22 +350,19 @@ export const fetchActorMovieCredits = async (id) => {
 
 export const fetchActorTvCredits = async (id) => {
   try {
-    const response = await axios.get(
-      `${BACKEND_BASE_URL}/people/${id}/tv_credits`,
-      {
-        params: { language: "en-US" },
-      },
-    );
+    const response = await axiosInstance.get(`/people/${id}/tv_credits`, {
+      params: { language: "en-US" },
+    });
     return response.data.cast;
   } catch (error) {
     console.error("Failed to fetch TV credits:", error);
     throw error;
   }
 };
-// Look at this, because it doesnt render in tv series detail page,
+
 export const fetchSimilarTvSeries = async (id) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/tv/${id}/similar`, {
+    const response = await axiosInstance.get(`/tv/${id}/similar`, {
       params: { language: "en-US" },
     });
     return response.data.results;
@@ -423,12 +374,8 @@ export const fetchSimilarTvSeries = async (id) => {
 
 export const searchMulti = async (query) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/search`, {
-      params: {
-        query,
-        language: "en-US",
-        include_adult: false,
-      },
+    const response = await axiosInstance.get(`/search`, {
+      params: { query, language: "en-US", include_adult: false },
     });
     return response.data.results;
   } catch (error) {
@@ -439,8 +386,8 @@ export const searchMulti = async (query) => {
 
 export const fetchTrending = async (timeWindow) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/trending`, {
-      params: { timeWindow: timeWindow, language: "en-US" },
+    const response = await axiosInstance.get(`/trending`, {
+      params: { timeWindow, language: "en-US" },
     });
     return response.data.results;
   } catch (error) {
@@ -456,15 +403,9 @@ export const fetchDiscoverMovie = async ({
   releaseYear = "",
 } = {}) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/movie/discover`, {
-      params: {
-        page,
-        sortBy,
-        genres,
-        releaseYear,
-      },
+    const response = await axiosInstance.get(`/movie/discover`, {
+      params: { page, sortBy, genres, releaseYear },
     });
-
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch discover movies:", error);
@@ -474,7 +415,7 @@ export const fetchDiscoverMovie = async ({
 
 export const fetchGenres = async () => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/genre/movie`, {
+    const response = await axiosInstance.get(`/genre/movie`, {
       params: { language: "en-US" },
     });
     return response.data.genres;
@@ -483,9 +424,10 @@ export const fetchGenres = async () => {
     throw error;
   }
 };
+
 export const fetchGenresTV = async () => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/genre/tv`, {
+    const response = await axiosInstance.get(`/genre/tv`, {
       params: { language: "en-US" },
     });
     return response.data.genres;
@@ -502,15 +444,9 @@ export const fetchDiscoverTV = async ({
   firstAirDate = "",
 } = {}) => {
   try {
-    const response = await axios.get(`${BACKEND_BASE_URL}/tv/discover`, {
-      params: {
-        page,
-        sortBy,
-        genres,
-        firstAirDate,
-      },
+    const response = await axiosInstance.get(`/tv/discover`, {
+      params: { page, sortBy, genres, firstAirDate },
     });
-
     return response.data.results;
   } catch (error) {
     console.error("Failed to fetch discover movies:", error);

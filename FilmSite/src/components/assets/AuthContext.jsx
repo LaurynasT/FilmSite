@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { fetchUserData } from "../Api/Api";
+import { getToken } from "../Api/axiosInstance";
 
 export const AuthContext = createContext(null);
 
@@ -10,6 +11,13 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
+      
+      if (!getToken()) {
+        setIsAuthenticated(false);
+        setUser(null);
+        setLoading(false);
+        return;
+      }
       const userData = await fetchUserData();
       if (userData) {
         setUser(userData);
@@ -34,7 +42,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (userData) => {
     setUser(userData);
     setIsAuthenticated(true);
-    await checkAuthStatus();
   };
 
   const logout = () => {
