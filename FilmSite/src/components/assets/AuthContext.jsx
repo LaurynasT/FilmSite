@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { fetchUserData } from "../Api/Api";
-import { getToken } from "../Api/axiosInstance";
+import { getToken } from "../Api/AxiosInstance";
 
 export const AuthContext = createContext(null);
 

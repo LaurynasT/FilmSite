@@ -1,4 +1,4 @@
-import axiosInstance, { setTokens, clearTokens, BACKEND_BASE_URL } from "./axiosInstance";
+import axiosInstance, { setTokens, clearTokens, BACKEND_BASE_URL } from "./AxiosInstance";
 import axios from "axios";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
