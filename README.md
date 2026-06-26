@@ -34,7 +34,7 @@ https://filmsite-5jdd.onrender.com/
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/your-username/filmsite.git
+git clone https://github.com/LaurynasT/FilmSite.git
 cd filmsite
 ```
 ### 2. Frontend setup
