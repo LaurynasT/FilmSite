@@ -74,5 +74,12 @@ Also you need to get API key from TMDB and OpenAI and update it in appsettings.j
 }
 ```
 
+### Updates
+## Current improvements and upcoming features:
 
+Migrating the frontend from JavaScript to TypeScript (TSX) for better code quality, maintainability, and scalability.
+Redesigning and improving the overall UI/UX with a cleaner, more modern styling approach.
+Enhancing the AI recommendation and search system to provide more accurate and personalized movie suggestions.
+Reorganizing the project structure to improve code readability and make future development easier.
+Exploring Stripe integration to add payment functionality and support potential premium features.
 
