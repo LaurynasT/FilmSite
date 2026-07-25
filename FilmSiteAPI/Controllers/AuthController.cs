@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var existingUser = await _userManager.FindByNameAsync(model.Email);
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
             if (existingUser != null)
             {
                 return BadRequest("User already exists");

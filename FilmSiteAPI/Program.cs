@@ -13,9 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
-string? connectionString = builder.Configuration.GetConnectionString("default");
-if (string.IsNullOrEmpty(connectionString))
-    throw new InvalidOperationException("Connection string is not configured.");
+string? connectionString = builder.Configuration.GetConnectionString("defaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
@@ -57,15 +55,13 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-var allowedOrigin = builder.Configuration["CORS_AllowedOrigin"]
-    ?? throw new InvalidOperationException("CORS origin is not configured.");
+
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowCredentials", policy =>
     {
         policy
-            .WithOrigins(allowedOrigin)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
