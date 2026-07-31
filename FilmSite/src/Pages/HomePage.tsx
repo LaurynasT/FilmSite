@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import PopularTvSeries from "../assets/PopularTvSeries";
-import Upcoming from "../assets/Upcoming";
-import PopularMovies from "../assets/PopularMovies";
-import Search from "../assets/Search";
-import TrendingSwiper from "../assets/TrendingSwiper";
+import { useState } from "react";
+import PopularMovies from "../components/popular/popularMovies/PopularMovies";
+import PopularTvSeries from "../components/popular/popularTv/PopularTvSeries";
+import Upcoming from "../components/upcoming/Upcoming";
 
-const HomePage = () => {
-  const [selectedCategory, setSelectedCategory] = useState("movies");
+
+export default function HomePage() {
 
   return (
     <div className="bg-black text-white min-h-screen pb-12 ">
@@ -45,4 +43,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+

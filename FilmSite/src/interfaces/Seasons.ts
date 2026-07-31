@@ -1,4 +1,4 @@
-interface Episodes {
+export interface Episode {
     id: number,
     name: string,
     still_path: string,
@@ -11,5 +11,5 @@ export interface Seasons {
     name: string,
     season_number: number,
     vote_average: number,
-    episodes: Episodes[]
+    episodes: Episode[]
 }

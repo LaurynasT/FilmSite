@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { logoutUser } from "../Api/Api";
+import { logoutUser } from "../../services/userService";
 import Search from "../search/Search";
-import Avatar from "../Icons/Avatar.png";
+import Avatar from "../assets/Avatar.png";
 
 export const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,7 +21,7 @@ export const NavBar = () => {
     }
   };
 
-  const linkClass = ({ isActive }) =>
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
     `text-sm font-medium transition-colors ${
       isActive ? "text-red-500" : "text-gray-300 hover:text-white"
     }`;
@@ -58,7 +58,7 @@ export const NavBar = () => {
               <li>
                 <NavLink
                   className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
-                  class="disabled"
+                  to=""
                 >
                   AI Search(Not finished)
                 </NavLink>

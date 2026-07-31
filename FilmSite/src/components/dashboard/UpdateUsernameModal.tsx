@@ -1,24 +1,37 @@
-import React, { useState } from "react";
-import { updateUsername } from "../Api/Api";
+import { useState } from "react";
+import { updateName } from "../../services/userService";
+import { NewName } from "../../interfaces/user/UpdateName";
+import { useNotificationStore } from "../../store/errorStore";
 
-const UpdateUsernameModal = ({ onClose }) => {
-  const [newName, setNewName] = useState("");
+type Props = {
+  onClose: () => void;
+};
+export default function UpdateUsernameModal({ onClose }: Props) {
+  const [newName, setNewName] = useState<NewName | null>({
+    NewName: "",
+  });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const { showError, showSuccess } = useNotificationStore();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setSuccess("");
 
     try {
-      await updateUsername(newName);
-      setSuccess("Username updated successfully!");
+      if (!newName) return;
+      await updateName(newName);
+      showSuccess("Username updated successfully!");
       setTimeout(() => onClose(), 1500);
     } catch (err) {
-      setError(err.response?.data?.errors?.NewName || "Name already taken!");
+      if (err instanceof Error) {
+        showError(err.message);
+      } else {
+        showError("Failed to update username.");
+      }
     } finally {
       setLoading(false);
     }
@@ -46,8 +59,12 @@ const UpdateUsernameModal = ({ onClose }) => {
           <input
             type="text"
             placeholder="New Username"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
+            value={newName?.NewName}
+            onChange={(e) =>
+              setNewName({
+                NewName: e.target.value,
+              })
+            }
             required
             className="w-full p-2 border border-gray-600 rounded bg-white/10 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-red-500"
           />
@@ -66,6 +83,4 @@ const UpdateUsernameModal = ({ onClose }) => {
       </div>
     </div>
   );
-};
-
-export default UpdateUsernameModal;
+}

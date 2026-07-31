@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   getFavorites,
   removeFavorite,
   getWatchList,
   removeFromWatchList,
-} from "../Api/Api.jsx";
-import { useAuth } from "../assets/AuthContext";
-import Sidebar from "../assets/Sidebar";
-import UserProfile from "../assets/UserProfile";
-import CollectionGrid from "../assets/CollectionGrid";
+} from "../api/Api";
+import { useAuth } from "../context/AuthContext";
+import Sidebar from "../components/dashboard/Sidebar";
+import UserProfile from "../components/user/UserProfile";
+import CollectionGrid from "../components/dashboard/CollectionGrid";
 
 const Dashboard = () => {
   const navigate = useNavigate();

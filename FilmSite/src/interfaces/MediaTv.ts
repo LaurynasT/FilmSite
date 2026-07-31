@@ -1,3 +1,7 @@
+import { Genre } from "./Genre";
+import { Networks } from "./Networks";
+import { Production } from "./ProductionCompanies";
+
 export interface MediaTv {
     id: number,
     name: string,

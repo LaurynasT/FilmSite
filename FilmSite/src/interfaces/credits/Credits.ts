@@ -1,11 +1,11 @@
-interface Cast {
+export interface Cast {
     id: number,
     profile_path: string,
     name: string,
     character: string
 }
 
-interface Crew {
+export interface Crew {
     id: number,
     profile_path: string,
     name: string,

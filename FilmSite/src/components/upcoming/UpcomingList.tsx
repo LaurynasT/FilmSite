@@ -14,8 +14,8 @@ export default function UpcomingList({upcoming}: Props) {
             <ScrollLeft scrollRef={moviesRef}/>
             <div ref={moviesRef} className="flex gap-3 overflow-x-auto  [&::-webkit-scrollbar]:hidden scroll-smooth" >
             {upcoming?.results.map((movie)=>(
-                <div key={movie.id}>
-                 <UpcomingItem upcoming={movie}/> 
+                <div >
+                 <UpcomingItem key={movie.id} upcoming={movie}/> 
                  </div>
                  ))}
                  </div>

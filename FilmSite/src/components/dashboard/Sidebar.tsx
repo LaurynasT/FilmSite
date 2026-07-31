@@ -1,7 +1,7 @@
 import React from "react";
-import BookmarkIcon from "../Icons/bookmark.png";
-import Watchlist from "../Icons/watchlist.png";
-import SubscriptionIcon from "../Icons/subscription.png";
+import BookmarkIcon from "../assets/bookmark.png";
+import Watchlist from "../assets/watchlist.png";
+import SubscriptionIcon from "../assets/subscription.png";
 
 type Props = {
   activeCollection: string;

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Avatar from "../Icons/Avatar.png";
+import  { useState } from "react";
+import Avatar from "../assets/Avatar.png";
 import UpdateUsernameModal from "../dashboard/UpdateUsernameModal";
 import type { User } from "../../interfaces/user/User";
 

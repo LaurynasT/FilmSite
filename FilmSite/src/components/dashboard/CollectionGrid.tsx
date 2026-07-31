@@ -1,5 +1,5 @@
 import React from "react";
-import { IMAGE_BASE_URL } from "../Api/Api";
+import { IMAGE_BASE_URL } from "../../api/Api";
 
 const CollectionGrid = ({
   collection,

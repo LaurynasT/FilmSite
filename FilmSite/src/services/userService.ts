@@ -17,7 +17,7 @@ export async function registerUser(data: RegisterUser) {
     return postData("/auth/signup", data);
 }  
 
-export async function logout(): Promise<void> {
+export async function logoutUser(): Promise<void> {
     await postData(`/auth/token/revoke`, {})
     clearTokens();
 }

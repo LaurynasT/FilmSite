@@ -125,16 +125,5 @@ export const getWatchList = async (mediaType = null) => {
   }
 };
 
-export const searchMulti = async (query) => {
-  try {
-    const response = await axiosInstance.get(`/search`, {
-      params: { query, language: "en-US", include_adult: false },
-    });
-    return response.data.results;
-  } catch (error) {
-    console.error("Error fetching search results:", error);
-    return [];
-  }
-};
 
 export { IMAGE_BASE_URL };
