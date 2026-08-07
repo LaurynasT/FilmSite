@@ -5,6 +5,9 @@ public class CrewModel
     [JsonPropertyName("id")]
     public int Id { get; set; }
 
+    [JsonPropertyName("credit_id")]
+    public string credit_id { get; set; } = string.Empty;
+
     [JsonPropertyName("profile_path")]
     public string ProfilePath { get; set; } = string.Empty;
 

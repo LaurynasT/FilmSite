@@ -99,10 +99,15 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
+            var user = await _userManager.FindByNameAsync(model.Email);
             if (user == null)
             {
                 return BadRequest("User with this username is not registered with us.");
+            }
+            if (string.IsNullOrEmpty(user.UserName))
+            {
+                _logger.LogError("User found but UserName is null/empty.");
+                return Unauthorized();
             }
 
             bool isValidPassword = await _userManager.CheckPasswordAsync(user, model.Password);
@@ -160,7 +165,7 @@ public class AuthController : ControllerBase
                 Expires = DateTime.UtcNow.AddDays(7)
             });
 
-           return Ok(new { accessToken = token, refreshToken = refreshToken });
+            return Ok(new { accessToken = token, refreshToken = refreshToken });
         }
         catch (Exception ex)
         {
@@ -170,19 +175,27 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("token/refresh")]
-    public async Task<IActionResult> Refresh(TokenModel tokenModel)
+    public async Task<IActionResult> Refresh()
     {
         try
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
-            var username = principal.Identity.Name;
+            var accessToken = Request.Cookies["accessToken"];
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+            {
+                return Unauthorized("No tokens found. Please login again.");
+            }
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+            var username = principal.Identity!.Name;
 
             var tokenInfo = _context.TokenInfos.SingleOrDefault(u => u.Username == username);
             if (tokenInfo == null
-                || tokenInfo.RefreshToken != tokenModel.RefreshToken
+                || tokenInfo.RefreshToken != refreshToken
                 || tokenInfo.ExpiredAt <= DateTime.UtcNow)
             {
-                return BadRequest("Invalid refresh token. Please login again.");
+                return Unauthorized("Invalid refresh token. Please login again.");
             }
 
             var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
@@ -191,16 +204,28 @@ public class AuthController : ControllerBase
             tokenInfo.RefreshToken = newRefreshToken;
             await _context.SaveChangesAsync();
 
-            return Ok(new TokenModel
+            Response.Cookies.Append("accessToken", newAccessToken, new CookieOptions
             {
-                AccessToken = newAccessToken,
-                RefreshToken = newRefreshToken
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddMinutes(15)
             });
+
+            Response.Cookies.Append("refreshToken", newRefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
+            return Ok(new { message = "Token refreshed" });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return Unauthorized("Please login again.");
         }
     }
 
@@ -210,7 +235,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var username = User.Identity.Name;
+            var username = User.Identity!.Name;
 
             var user = _context.TokenInfos.SingleOrDefault(u => u.Username == username);
             if (user == null)
@@ -221,7 +246,7 @@ public class AuthController : ControllerBase
             user.RefreshToken = string.Empty;
             await _context.SaveChangesAsync();
 
-            
+
             Response.Cookies.Delete("accessToken", new CookieOptions
             {
                 Path = "/",
@@ -254,10 +279,10 @@ public class AuthController : ControllerBase
         try
         {
 
-            var username = User.Identity.Name;
+            var username = User.Identity!.Name;
 
 
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByNameAsync(username!);
             if (user == null)
             {
                 return NotFound("User not found");
@@ -272,7 +297,7 @@ public class AuthController : ControllerBase
                 return BadRequest("Name is already taken.");
             }
 
-            user.Name = model.NewName;
+            user.Name = model.NewName!;
             var result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
@@ -296,8 +321,13 @@ public class AuthController : ControllerBase
         try
         {
 
-            var username = User.Identity.Name;
+            var username = User.Identity!.Name;
 
+            if (string.IsNullOrEmpty(username))
+            {
+                _logger.LogError("User found but UserName is null/empty.");
+                return Unauthorized();
+            }
 
             var user = await _userManager.FindByNameAsync(username);
             if (user == null)
