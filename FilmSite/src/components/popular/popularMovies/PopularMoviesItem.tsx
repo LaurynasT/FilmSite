@@ -10,12 +10,9 @@ type Props = {
 export default function PopularMoviesItem({ movie }: Props) {
   const navigate = useNavigate();
 
-  const goToMovieDetail = (id: number) => {
-    navigate(`MovieDetail/${id}`);
-  };
   return (
-    <div>
-      <MovieCard onClick={() => goToMovieDetail(movie.id)}>
+    <>
+      <MovieCard onClick={() => navigate(`MovieDetail/${movie.id}`)}>
         <MovieCard.Image
           src={`${IMAGE_BASE_URL}${movie.poster_path}`}
           alt={movie.title}
@@ -23,6 +20,6 @@ export default function PopularMoviesItem({ movie }: Props) {
           <MovieCard.Badge>⭐ {movie.vote_average.toFixed(1)}</MovieCard.Badge>
         </MovieCard.Image>
       </MovieCard>
-    </div>
+    </>
   );
 }

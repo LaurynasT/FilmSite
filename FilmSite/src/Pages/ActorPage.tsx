@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/ActorPage.css";
-import ActorDetails from "../components/actor/ActorDetails";
+import ActorDetails from "../components/details/actor/ActorDetails";
 import { fetchActorData } from "../services/tmdbActorService";
 import { Actor } from "../interfaces/Actor";
-import ActorMovies from "../components/actor/actorMovies/ActorMovies";
-import ActorTv from "../components/actor/actorTvShows/ActorTv";
+import ActorMovies from "../components/details/actor/actorMovies/ActorMovies";
+import ActorTv from "../components/details/actor/actorTvShows/ActorTv";
 
 export default function ActorPage() {
   const { id } = useParams();

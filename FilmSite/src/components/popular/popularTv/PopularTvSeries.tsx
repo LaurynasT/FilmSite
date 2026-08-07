@@ -5,7 +5,7 @@ import { fetchPopularTv } from "../../../services/tmdbTvService";
 import PopularTvList from "./PopularTvList";
 
 export default function PopularTvSeries() {
-  const [tvseries, setTvSeries] = useState<Data<MediaTv> | null>(null);
+  const [tvseries, setTvSeries] = useState<Data<MediaTv>>();
   const [loading, setLoading] = useState(true);
 
   async function loadData() {
@@ -14,14 +14,15 @@ export default function PopularTvSeries() {
       const response = await fetchPopularTv();
       setTvSeries(response);
     } finally {
-      setLoading(true);
+      setLoading(false);
     }
   }
   useEffect(() => {
     loadData();
   }, []);
 
-  if (loading || !tvseries) return <p>Loading movies...</p>;
+  if (loading) return <p>Loading movies...</p>;
+  if(!tvseries || tvseries.results.length === 0) return <p>No data</p>
 
   return (
     <div>

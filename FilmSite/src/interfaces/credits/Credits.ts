@@ -2,7 +2,8 @@ export interface Cast {
     id: number,
     profile_path: string,
     name: string,
-    character: string
+    character: string,
+    credit_id: string,
 }
 
 export interface Crew {
@@ -11,6 +12,7 @@ export interface Crew {
     name: string,
     job: string,
     department: string,
+    credit_id: string
 }
 
 export interface Credits{

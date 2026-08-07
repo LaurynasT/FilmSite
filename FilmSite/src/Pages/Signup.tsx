@@ -6,7 +6,7 @@ import { z } from "zod";
 import BackgroundImage from "../components/assets/LoginBackground.png";
 import { RegisterUser } from "../interfaces/user/RegisterUser";
 import { useNotificationStore } from "../store/errorStore";
-import SignupForm from "../components/forms/SignUpForm";
+import SignupForm from "../components/forms/SignupForm";
 
 const SignupSchema = z
   .object({

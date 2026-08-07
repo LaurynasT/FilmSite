@@ -1,12 +1,12 @@
 import  { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import SeasonsEpisodes from "../components/tvDetails/seasonsEpisodes/SeasonsEpisodes";
-import TvCredits from "../components/tvDetails/tvCredits/tvCredits";
-import SimilarTv from "../components/tvDetails/similarTv/similarTv";
+import SeasonsEpisodes from "../components/details/tvDetails/seasonsEpisodes/SeasonsEpisodes";
+import TvCredits from "../components/details/tvDetails/tvCredits/tvCredits";
+import SimilarTv from "../components/details/tvDetails/similarTv/similarTv";
 import { fetchTvDetail } from "../services/tmdbTvService";
 import type { TvDetail } from "../interfaces/TvDetail";
-import TvDetails  from "../components/tvDetails/TvDetails";
+import TvDetails  from "../components/details/tvDetails/TvDetails";
 
 export default function TvSeriesDetails() {
   const { id } = useParams();

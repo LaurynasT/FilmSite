@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, useContext, type ReactNode } from "react";
 import { getUserData } from "../services/userService";
-import { getToken } from "../api/AxiosInstance";
 import { User } from "../interfaces/user/User";
 
 interface AuthProps {
@@ -28,15 +27,7 @@ export function AuthProvider({ children }: AuthProps) {
 
   async function checkAuthStatus() {
     try {
-      if (!getToken()) {
-        setIsAuthenticated(false);
-        setUser(null);
-        setLoading(false);
-        return;
-      }
-
-      const userData = await getUserData();
-
+      const userData = await getUserData(); 
       if (userData) {
         setUser(userData);
         setIsAuthenticated(true);
@@ -44,17 +35,13 @@ export function AuthProvider({ children }: AuthProps) {
         setIsAuthenticated(false);
         setUser(null);
       }
-
     } catch (error) {
-      console.log("Authentication check failed:", error);
       setIsAuthenticated(false);
       setUser(null);
-
     } finally {
       setLoading(false);
     }
-  }
-
+}
 
   useEffect(() => {
     checkAuthStatus();

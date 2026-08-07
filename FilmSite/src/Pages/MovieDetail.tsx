@@ -4,10 +4,10 @@ import { useParams } from "react-router-dom";
 import "react-circular-progressbar/dist/styles.css";
 import "../styles/Moviedetail.css";
 import "react-toastify/dist/ReactToastify.css";
-import SimilarMovies from "../components/movieDetails/similarMovies/SimilarMovies";
-import MovieCredits from "../components/movieDetails/movieCredits/MovieCredits";
-import MovieReviews from "../components/movieDetails/movieReviews/MovieReviews";
-import MovieDetailed from "../components/movieDetails/MovieDetailed";
+import SimilarMovies from "../components/details/movieDetails/similarMovies/SimilarMovies";
+import MovieCredits from "../components/details/movieDetails/movieCredits/MovieCredits";
+import MovieReviews from "../components/details/movieDetails/movieReviews/MovieReviews";
+import MovieDetailed from "../components/details/movieDetails/MovieDetailed";
 import { fetchMovieDetail } from "../services/tmdbMovieService";
 import type { MovieDetail } from "../interfaces/MovieDetail";
 

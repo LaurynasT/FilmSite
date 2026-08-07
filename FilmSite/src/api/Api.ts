@@ -1,8 +1,8 @@
-import axiosInstance, { setTokens, clearTokens, BACKEND_BASE_URL } from "./AxiosInstance"
-import axios from "axios";
+import axiosInstance from "./AxiosInstance"
 
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
+export const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+export const IMAGE_BACKGROUND_URL= "https://image.tmdb.org/t/p/w1280"
 export const fetchData = async <T>(
     endpoint: string,
     queryParams?: Record<string, any>
@@ -28,102 +28,3 @@ export const postData = async <T>(endpoint: string, params: object): Promise<T> 
   return response.data
 }
 
-
-export const getFavorites = async (mediaType = null) => {
-  try {
-    const response = await axiosInstance.get(`/favorites`, {
-      params: mediaType ? { mediaType } : {},
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching favorites:", error);
-    throw error;
-  }
-};
-
-export const addFavorite = async (mediaId, mediaType, title, posterPath) => {
-  try {
-    const response = await axiosInstance.post(`/favorites/add`, {
-      mediaId, mediaType, title, posterPath,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error adding favorite:", error);
-    throw error;
-  }
-};
-
-export const removeFavorite = async (mediaId, mediaType) => {
-  try {
-    const response = await axiosInstance.delete(
-      `/favorites/remove?mediaId=${mediaId}&mediaType=${mediaType}`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error removing favorite:", error);
-    throw error;
-  }
-};
-
-export const checkFavorite = async (mediaId, mediaType) => {
-  try {
-    const response = await axiosInstance.get(
-      `/favorites/check?mediaId=${mediaId}&mediaType=${mediaType}`,
-    );
-    return response.data.isFavorite;
-  } catch (error) {
-    console.error("Error checking favorite status:", error);
-    return false;
-  }
-};
-
-export const checkWatchList = async (mediaId, mediaType) => {
-  try {
-    const response = await axiosInstance.get(
-      `/WatchList/check?mediaId=${mediaId}&mediaType=${mediaType}`,
-    );
-    return response.data.isInWatchList;
-  } catch (error) {
-    console.error("Error checking watch list status:", error);
-    return false;
-  }
-};
-
-export const addToWatchList = async (mediaId, mediaType, title, posterPath) => {
-  try {
-    const response = await axiosInstance.post(`/WatchList/add`, {
-      mediaId, mediaType, title, posterPath,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error adding to watch list:", error);
-    throw error;
-  }
-};
-
-export const removeFromWatchList = async (mediaId, mediaType) => {
-  try {
-    const response = await axiosInstance.delete(
-      `/WatchList/remove?mediaId=${mediaId}&mediaType=${mediaType}`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error removing from watch list:", error);
-    throw error;
-  }
-};
-
-export const getWatchList = async (mediaType = null) => {
-  try {
-    const response = await axiosInstance.get(`/WatchList`, {
-      params: mediaType ? { mediaType } : {},
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching watch list:", error);
-    throw error;
-  }
-};
-
-
-export { IMAGE_BASE_URL };
