@@ -10,5 +10,5 @@ public class WatchListItem
     public string PosterPath { get; set; } = string.Empty;
     public DateTime AddedOn { get; set; }
 
-    public required ApplicationUser User { get; set; }
+    public  ApplicationUser User { get; set; } = null!;
 }
