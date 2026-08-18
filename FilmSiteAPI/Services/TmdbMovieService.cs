@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using NetRefreshTokenDemo.Api.Interfaces;
-using NetRefreshTokenDemo.Api.Models.DTOs;
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Interfaces;
+using FilmSiteAPI.Models;
 
+namespace FilmSiteAPI.Services;
 public class TmdbMovieService : TmdbBaseService, ITmdbMovieInterface
 {
     public TmdbMovieService(HttpClient httpClient, IConfiguration config)
@@ -23,11 +24,11 @@ public class TmdbMovieService : TmdbBaseService, ITmdbMovieInterface
         return await GetAsync<TrailerResponseDto>(url);
     }
 
-    public Task<ResponseDTO<PopularMovieModel>> GetPopularMoviesAsync()
+    public Task<ResponseDTO<PopularMovieDTO>> GetPopularMoviesAsync()
     {
         var url = $"{BaseUrl}/movie/popular?api_key={_apiKey}&language=en-US";
 
-        return GetAsync<ResponseDTO<PopularMovieModel>>(url);
+        return GetAsync<ResponseDTO<PopularMovieDTO>>(url);
     }
 
     public Task<CreditsResponseDto> GetMovieCreditsAsync(int id)
@@ -57,25 +58,25 @@ public class TmdbMovieService : TmdbBaseService, ITmdbMovieInterface
         return GetAsync<ResponseDTO<DiscoverMoviesModel>>(url);
     }
 
-    public Task<ResponseDTO<UpcomingMoviesModel>> GetUpcomingMoviesAsync()
+    public Task<ResponseDTO<UpcomingMoviesDTO>> GetUpcomingMoviesAsync()
     {
         var url = $"{BaseUrl}/movie/upcoming?api_key={_apiKey}&language=en-US&page=1";
 
-        return GetAsync<ResponseDTO<UpcomingMoviesModel>>(url);
+        return GetAsync<ResponseDTO<UpcomingMoviesDTO>>(url);
     }
 
-    public Task<ResponseDTO<SimilarMoviesModel>> GetSimilarMoviesAsync(int id)
+    public Task<ResponseDTO<SimilarMoviesDTO>> GetSimilarMoviesAsync(int id)
     {
         var url = $"{BaseUrl}/movie/{id}/similar?api_key={_apiKey}&language=en-US&page=1";
 
-        return GetAsync<ResponseDTO<SimilarMoviesModel>>(url);
+        return GetAsync<ResponseDTO<SimilarMoviesDTO>>(url);
     }
 
-    public Task<ResponseDTO<MovieReviewModel>> GetMovieReviewsAsync(int id, int page = 1)
+    public Task<ResponseDTO<MovieReviewDTO>> GetMovieReviewsAsync(int id, int page = 1)
     {
         var url = $"{BaseUrl}/movie/{id}/reviews?api_key={_apiKey}&language=en-US&page={page}";
 
-        return GetAsync<ResponseDTO<MovieReviewModel>>(url);
+        return GetAsync<ResponseDTO<MovieReviewDTO>>(url);
     }
 }
 

@@ -1,12 +1,12 @@
+using FilmSiteAPI.DbContext;
+using FilmSiteAPI.Models;
+using FilmSiteAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NetRefreshTokenDemo.Api.Models;
-using NetRefreshTokenDemo.Api.Services;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+
 
 namespace NetRefreshTokenDemo.Api.Controllers
 {
@@ -33,9 +33,12 @@ namespace NetRefreshTokenDemo.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRecommendations([FromQuery] string mediaType = null)
+        public async Task<IActionResult> GetRecommendations([FromQuery] string mediaType)
         {
-            var username = User.Identity.Name;
+            var username = User.Identity?.Name;
+            if(username == null)
+                 return NotFound("username not found");
+    
             var user = await _userManager.FindByNameAsync(username);
 
             if (user == null)
@@ -73,7 +76,9 @@ namespace NetRefreshTokenDemo.Api.Controllers
             if (string.IsNullOrEmpty(request.Prompt))
                 return BadRequest("Prompt cannot be empty");
 
-            var username = User.Identity.Name;
+            var username = User.Identity?.Name;
+            if(username == null)
+                 return NotFound("Username not found");
             var user = await _userManager.FindByNameAsync(username);
 
             if (user == null)
@@ -113,8 +118,8 @@ namespace NetRefreshTokenDemo.Api.Controllers
     public class TextRecommendationRequest
     {
         [Required]
-        public string Prompt { get; set; }
+        public string Prompt { get; set; } = string.Empty;
 
-        public string? MediaType { get; set; }
+        public string MediaType { get; set; } = string.Empty;
     }
 }

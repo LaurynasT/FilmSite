@@ -1,9 +1,8 @@
+using FilmSiteAPI.Constants;
+using FilmSiteAPI.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using NetRefreshTokenDemo.Api.Constants;
-using NetRefreshTokenDemo.Api.Models;
 
-namespace NetRefreshTokenDemo.Api.Data;
+namespace FilmSiteAPI.DbContext;
 
 public class DbSeeder
 {

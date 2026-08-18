@@ -1,5 +1,6 @@
-using NetRefreshTokenDemo.Api.Interfaces;
+using FilmSiteAPI.Interfaces;
 
+namespace FilmSiteAPI.Services;
 public class TmdbSearchService : TmdbBaseService, ITmdbSearchInterface
 {
     public TmdbSearchService(HttpClient httpClient, IConfiguration config)

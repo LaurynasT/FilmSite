@@ -1,12 +1,12 @@
 using System.Text;
+using FilmSiteAPI.DbContext;
+using FilmSiteAPI.Interfaces;
+using FilmSiteAPI.Models;
+using FilmSiteAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NetRefreshTokenDemo.Api.Data;
-using NetRefreshTokenDemo.Api.Interfaces;
-using NetRefreshTokenDemo.Api.Models;
-using NetRefreshTokenDemo.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +71,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddHttpClient<IOpenAIService, OpenAIService>();
 builder.Services.AddHttpClient<ITmdbMovieInterface, TmdbMovieService>();
@@ -81,6 +82,8 @@ builder.Services.AddHttpClient<ITmdbTrendingInterface, TmdbTrendingService>();
 builder.Services.AddHttpClient<IMediaLookupService, MediaLookupService>();
 builder.Services.AddHttpClient<ITmdbPeopleInterface, TmdbPeopleService>();
 builder.Services.AddHttpClient<ITmdbCompanyInterface, TmdbCompanyService>();
+builder.Services.AddScoped<IFavoritesInterface, FavoriteService>();
+builder.Services.AddScoped<IWatchlistInterface, WatchListService>();
 
 var app = builder.Build();
 

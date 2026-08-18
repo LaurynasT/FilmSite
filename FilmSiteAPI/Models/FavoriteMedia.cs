@@ -1,4 +1,5 @@
 
+namespace FilmSiteAPI.Models;
 public class FavoriteMedia
 {
     public int Id { get; set; }

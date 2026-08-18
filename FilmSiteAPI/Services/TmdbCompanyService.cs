@@ -1,5 +1,8 @@
-using NetRefreshTokenDemo.Api.Interfaces;
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Interfaces;
 
+
+namespace FilmSiteAPI.Services;
 public class TmdbCompanyService : TmdbBaseService, ITmdbCompanyInterface
 {
     public TmdbCompanyService(HttpClient httpClient, IConfiguration config)

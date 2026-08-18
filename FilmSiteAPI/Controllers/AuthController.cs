@@ -1,14 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using FilmSiteAPI.Constants;
+using FilmSiteAPI.DbContext;
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Interfaces;
+using FilmSiteAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NetRefreshTokenDemo.Api.Constants;
-using NetRefreshTokenDemo.Api.Models;
-using NetRefreshTokenDemo.Api.Models.DTOs;
 
-namespace NetRefreshTokenDemo.Api.Controllers;
+
+namespace FilmSiteAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -33,7 +36,7 @@ public class AuthController : ControllerBase
 
     }
     [HttpPost("signup")]
-    public async Task<IActionResult> Signup(SignupModel model)
+    public async Task<IActionResult> Signup(SignupDTO model)
     {
         try
         {
@@ -95,14 +98,14 @@ public class AuthController : ControllerBase
         }
     }
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginModel model)
+    public async Task<IActionResult> Login(LoginDTO model)
     {
         try
         {
             var user = await _userManager.FindByNameAsync(model.Email);
             if (user == null)
             {
-                return BadRequest("User with this username is not registered with us.");
+                return BadRequest("User with this Email is not registered with us.");
             }
             if (string.IsNullOrEmpty(user.UserName))
             {
@@ -118,7 +121,7 @@ public class AuthController : ControllerBase
 
             List<Claim> authClaims = [
                 new(ClaimTypes.Name, user.UserName),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             ];
 
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -165,7 +168,7 @@ public class AuthController : ControllerBase
                 Expires = DateTime.UtcNow.AddDays(7)
             });
 
-            return Ok(new { accessToken = token, refreshToken = refreshToken });
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -274,7 +277,7 @@ public class AuthController : ControllerBase
 
     [HttpPut("updatename")]
     [Authorize]
-    public async Task<IActionResult> UpdateName([FromBody] UpdateNameModel model)
+    public async Task<IActionResult> UpdateName([FromBody] UpdateNameDTO model)
     {
         try
         {
@@ -338,10 +341,10 @@ public class AuthController : ControllerBase
 
             var userData = new
             {
-                Id = user.Id,
+               
                 Name = user.Name,
                 Email = user.Email,
-                UserName = user.UserName
+                UserName = user.UserName,
 
             };
 

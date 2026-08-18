@@ -1,3 +1,4 @@
+namespace FilmSiteAPI.DTOs;
 public class ResponseDTO<T>
 {
     public int Page { get; set; }

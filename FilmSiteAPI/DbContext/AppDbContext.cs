@@ -1,7 +1,8 @@
+using FilmSiteAPI.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace NetRefreshTokenDemo.Api.Models;
+namespace FilmSiteAPI.DbContext;
 
 public class AppDbContext : IdentityDbContext<ApplicationUser>
 {

@@ -1,8 +1,7 @@
+using FilmSiteAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using NetRefreshTokenDemo.Api.Interfaces;
-using System.Threading.Tasks;
 
-namespace NetRefreshTokenDemo.Api.Controllers
+namespace FilmSiteAPI.Controllers
 {
     [ApiController]
     [Route("api/tv")]

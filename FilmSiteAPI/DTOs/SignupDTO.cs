@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NetRefreshTokenDemo.Api.Models.DTOs;
+namespace FilmSiteAPI.DTOs;
 
-public class SignupModel
+public class SignupDTO
 {
     [Required]
     [MaxLength(30)]

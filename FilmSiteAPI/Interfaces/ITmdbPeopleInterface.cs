@@ -1,9 +1,12 @@
-namespace NetRefreshTokenDemo.Api.Interfaces;
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Models;
+
+namespace FilmSiteAPI.Interfaces;
 
 public interface ITmdbPeopleInterface
 {
     Task<PeopleDTO> GetPeopleDetailsAsync(int id);
-    Task<PeopleShowDTO<PeopleMovieModel>> GetActorMovieCreditsAsync(int id);
-    Task<PeopleShowDTO<PeopleTvModel>> GetActorTvCreditsAsync(int id);
+    Task<PeopleShowDTO<PeopleMovieDTO>> GetActorMovieCreditsAsync(int id);
+    Task<PeopleShowDTO<PeopleTvDTO>> GetActorTvCreditsAsync(int id);
 }
 

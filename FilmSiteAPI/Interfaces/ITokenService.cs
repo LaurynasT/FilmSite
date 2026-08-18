@@ -1,5 +1,6 @@
 using System.Security.Claims;
 
+namespace FilmSiteAPI.Interfaces;
 public interface ITokenService
 {
     string GenerateAccessToken(IEnumerable<Claim> claims);

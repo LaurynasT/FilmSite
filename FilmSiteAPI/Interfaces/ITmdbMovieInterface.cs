@@ -1,12 +1,13 @@
-using NetRefreshTokenDemo.Api.Models.DTOs;
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Models;
 
-namespace NetRefreshTokenDemo.Api.Interfaces;
+namespace FilmSiteAPI.Interfaces;
 
 public interface ITmdbMovieInterface
 {
     Task<MovieDetailDto> GetMovieDetailAsync(int id);
     Task<TrailerResponseDto> GetMovieTrailerAsync(int id);
-    Task<ResponseDTO<PopularMovieModel>> GetPopularMoviesAsync();
+    Task<ResponseDTO<PopularMovieDTO>> GetPopularMoviesAsync();
     Task<CreditsResponseDto> GetMovieCreditsAsync(int id);
     Task<ResponseDTO<DiscoverMoviesModel>> GetDiscoverMoviesAsync(
         int page = 1,
@@ -15,8 +16,8 @@ public interface ITmdbMovieInterface
         string releaseYear = ""
     );
 
-    Task<ResponseDTO<UpcomingMoviesModel>> GetUpcomingMoviesAsync();
-    Task<ResponseDTO<SimilarMoviesModel>> GetSimilarMoviesAsync(int id);
+    Task<ResponseDTO<UpcomingMoviesDTO>> GetUpcomingMoviesAsync();
+    Task<ResponseDTO<SimilarMoviesDTO>> GetSimilarMoviesAsync(int id);
 
-    Task<ResponseDTO<MovieReviewModel>> GetMovieReviewsAsync(int id, int page = 1);
+    Task<ResponseDTO<MovieReviewDTO>> GetMovieReviewsAsync(int id, int page = 1);
 }

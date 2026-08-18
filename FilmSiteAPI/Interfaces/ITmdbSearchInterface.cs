@@ -1,4 +1,4 @@
-namespace NetRefreshTokenDemo.Api.Interfaces;
+namespace FilmSiteAPI.Interfaces;
 
 public interface ITmdbSearchInterface
 {

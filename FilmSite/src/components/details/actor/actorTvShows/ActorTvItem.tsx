@@ -21,7 +21,7 @@ export default function ActorTvItem({ tv }: Props) {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`${IMAGE_BASE_URL}/${tv.poster_Path}`}
+          src={`${IMAGE_BASE_URL}/${tv.poster_path}`}
           alt={tv.name}
           className="movie-poster"
         />

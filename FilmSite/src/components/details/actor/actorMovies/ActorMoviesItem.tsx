@@ -21,7 +21,7 @@ export default function ActorMovieItem({ movie }: Props) {
         style={{ cursor: "pointer" }}
       >
         <img
-          src={`${IMAGE_BASE_URL}${movie.poster_Path}`}
+          src={`${IMAGE_BASE_URL}${movie.poster_path}`}
           alt={movie.title}
           className="movie-poster"
         />

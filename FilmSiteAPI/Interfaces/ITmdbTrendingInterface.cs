@@ -1,11 +1,13 @@
-using NetRefreshTokenDemo.Api.Models.DTOs;
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Models;
 
-namespace NetRefreshTokenDemo.Api.Interfaces;
+
+namespace FilmSiteAPI.Interfaces;
 
 public interface ITmdbTrendingInterface
 {
 
-    Task<ResponseDTO<TrendingModel>> GetTrendingAsync(string timeWindow);
+    Task<ResponseDTO<TrendingDTO>> GetTrendingAsync(string timeWindow);
    
 
 }

@@ -1,3 +1,4 @@
+namespace FilmSiteAPI.DTOs;
 public class CompanyDetailDTO
 {
     public int Id { get; set; }

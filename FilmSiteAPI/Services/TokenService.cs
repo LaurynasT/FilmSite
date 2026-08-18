@@ -1,10 +1,11 @@
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using FilmSiteAPI.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
+namespace FilmSiteAPI.Services;
 public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
@@ -19,7 +20,7 @@ public class TokenService : ITokenService
 
         // Create a symmetric security key using the secret key from the configuration.
         var authSigningKey = new SymmetricSecurityKey
-                        (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+                        (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"] ?? throw new InvalidOperationException("No JWT SECRET")));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -60,7 +61,7 @@ public class TokenService : ITokenService
             ValidateLifetime = false,
             ClockSkew = TimeSpan.Zero,
             IssuerSigningKey = new SymmetricSecurityKey
-                       (Encoding.UTF8.GetBytes(_configuration["JWT:secret"]))
+                       (Encoding.UTF8.GetBytes(_configuration["JWT:secret"] ?? throw new InvalidOperationException("No JWT SECRET"))) 
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

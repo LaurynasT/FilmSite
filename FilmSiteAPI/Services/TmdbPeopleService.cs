@@ -1,6 +1,8 @@
-using Microsoft.AspNetCore.Identity;
-using NetRefreshTokenDemo.Api.Interfaces;
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Interfaces;
+using FilmSiteAPI.Models;
 
+namespace FilmSiteAPI.Services;
 public class TmdbPeopleService : TmdbBaseService, ITmdbPeopleInterface
 {
     public TmdbPeopleService(HttpClient httpClient, IConfiguration config)
@@ -14,17 +16,17 @@ public class TmdbPeopleService : TmdbBaseService, ITmdbPeopleInterface
 
         return GetAsync<PeopleDTO>(url);
     }
-    public Task<PeopleShowDTO<PeopleMovieModel>> GetActorMovieCreditsAsync(int Id)
+    public Task<PeopleShowDTO<PeopleMovieDTO>> GetActorMovieCreditsAsync(int Id)
     {
         var url = $"{BaseUrl}/person/{Id}/movie_credits?api_key={_apiKey}&language=en-US";
 
-        return GetAsync<PeopleShowDTO<PeopleMovieModel>>(url);
+        return GetAsync<PeopleShowDTO<PeopleMovieDTO>>(url);
     }
-    public Task<PeopleShowDTO<PeopleTvModel>> GetActorTvCreditsAsync(int Id)
+    public Task<PeopleShowDTO<PeopleTvDTO>> GetActorTvCreditsAsync(int Id)
     {
         var url = $"{BaseUrl}/person/{Id}/tv_credits?api_key={_apiKey}&language=en-US";
 
-        return GetAsync<PeopleShowDTO<PeopleTvModel>>(url);
+        return GetAsync<PeopleShowDTO<PeopleTvDTO>>(url);
     }
 
 

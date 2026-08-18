@@ -1,4 +1,6 @@
-namespace NetRefreshTokenDemo.Api.Interfaces;
+using FilmSiteAPI.DTOs;
+
+namespace FilmSiteAPI.Interfaces;
 
 public interface ITmdbCompanyInterface
 {

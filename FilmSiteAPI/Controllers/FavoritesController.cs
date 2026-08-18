@@ -1,130 +1,110 @@
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NetRefreshTokenDemo.Api.Models;
+
+namespace FilmSiteAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class FavoritesController : ControllerBase
+public class FavoritesController(IFavoritesInterface favoriteService) : ControllerBase
 {
-    private readonly AppDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public FavoritesController(AppDbContext context, UserManager<ApplicationUser> userManager)
-    {
-        _context = context;
-        _userManager = userManager;
-    }
-
     [HttpGet]
-    public async Task<IActionResult> GetFavorites([FromQuery] string mediaType = null)
+    public async Task<IActionResult> GetFavorites([FromQuery] string mediaType)
     {
-        var username = User.Identity.Name;
-        var user = await _userManager.FindByNameAsync(username);
-
-        if (user == null)
-            return NotFound("User not found");
-
-        var query = _context.Favorites.Where(f => f.UserId == user.Id);
-
-
-        if (!string.IsNullOrEmpty(mediaType))
+        try
         {
-            query = query.Where(f => f.MediaType == mediaType.ToLower());
+            var result = await favoriteService.GetFavorites(mediaType);
+            return Ok(result);
         }
+        catch (Exception ex)
+        {
+            if (ex.Message == "User not found")
+                return NotFound(ex.Message);
 
-        var favorites = await query
-            .OrderByDescending(f => f.AddedOn)
-            .ToListAsync();
+            if (ex.Message == "User has no favorites")
+                return NotFound(ex.Message);
 
-        return Ok(favorites);
+            if (ex.Message == "User is not authenticated")
+                return Unauthorized(ex.Message);
+
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPost("add")]
-    public async Task<IActionResult> AddFavorite([FromBody] AddFavoriteModel model)
+    public async Task<IActionResult> AddFavorite([FromBody] AddUserMediaDTO addFavorite)
     {
-        if (string.IsNullOrEmpty(model.MediaType) || (model.MediaType != "movie" && model.MediaType != "tv"))
-            return BadRequest("MediaType must be either 'movie' or 'tv'");
-
-        var username = User.Identity.Name;
-        var user = await _userManager.FindByNameAsync(username);
-
-        if (user == null)
-            return NotFound("User not found");
-
-
-        var existing = await _context.Favorites
-            .FirstOrDefaultAsync(f =>
-                f.UserId == user.Id &&
-                f.MediaId == model.MediaId &&
-                f.MediaType == model.MediaType);
-
-        if (existing != null)
-            return BadRequest("Media already in favorites");
-
-        var favorite = new FavoriteMedia
+        try
         {
-            UserId = user.Id,
-            MediaId = model.MediaId,
-            MediaType = model.MediaType,
-            Title = model.Title,
-            PosterPath = model.PosterPath,
-            AddedOn = DateTime.UtcNow
-        };
+            var added = await favoriteService.AddFavorite(addFavorite);
+            return Ok(added);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "MediaType must be either 'movie' or 'tv'")
+                return BadRequest(ex.Message);
 
-        _context.Favorites.Add(favorite);
-        await _context.SaveChangesAsync();
+            if (ex.Message == "Media already in favorites")
+                return BadRequest(ex.Message);
 
-        return Ok(favorite);
+            if (ex.Message == "User not found")
+                return NotFound(ex.Message);
+
+            if (ex.Message == "User is not authenticated")
+                return Unauthorized(ex.Message);
+
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpDelete("remove")]
     public async Task<IActionResult> RemoveFavorite([FromQuery] int mediaId, [FromQuery] string mediaType)
     {
-        if (string.IsNullOrEmpty(mediaType) || (mediaType != "movie" && mediaType != "tv"))
-            return BadRequest("MediaType must be either 'movie' or 'tv'");
+        try
+        {
+            await favoriteService.DeleteFavorite(mediaId, mediaType);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "MediaType must be either 'movie' or 'tv'")
+                return BadRequest(ex.Message);
 
-        var username = User.Identity.Name;
-        var user = await _userManager.FindByNameAsync(username);
+            if (ex.Message == "Media not in favorites")
+                return BadRequest(ex.Message);
 
-        if (user == null)
-            return NotFound("User not found");
+            if (ex.Message == "User not found")
+                return NotFound(ex.Message);
 
-        var favorite = await _context.Favorites
-            .FirstOrDefaultAsync(f =>
-                f.UserId == user.Id &&
-                f.MediaId == mediaId &&
-                f.MediaType == mediaType);
+            if (ex.Message == "User is not authenticated")
+                return Unauthorized(ex.Message);
 
-        if (favorite == null)
-            return NotFound("Media not in favorites");
-
-        _context.Favorites.Remove(favorite);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpGet("check")]
     public async Task<IActionResult> CheckFavorite([FromQuery] int mediaId, [FromQuery] string mediaType)
     {
-        if (string.IsNullOrEmpty(mediaType) || (mediaType != "movie" && mediaType != "tv"))
-            return BadRequest("MediaType must be either 'movie' or 'tv'");
+        try
+        {
+            var result = await favoriteService.CheckFavorite(mediaId, mediaType);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "MediaType must be either 'movie' or 'tv'")
+                return BadRequest(ex.Message);
 
-        var username = User.Identity.Name;
-        var user = await _userManager.FindByNameAsync(username);
+            if (ex.Message == "User not found")
+                return NotFound(ex.Message);
 
-        if (user == null)
-            return NotFound("User not found");
+            if (ex.Message == "User is not authenticated")
+                return Unauthorized(ex.Message);
 
-        var isFavorite = await _context.Favorites
-            .AnyAsync(f =>
-                f.UserId == user.Id &&
-                f.MediaId == mediaId &&
-                f.MediaType == mediaType);
-
-        return Ok(new { isFavorite });
+            return StatusCode(500, ex.Message);
+        }
     }
 }

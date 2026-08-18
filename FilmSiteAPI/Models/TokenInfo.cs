@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace FilmSiteAPI.Models;
 public class TokenInfo
 {
     public int Id { get; set; }

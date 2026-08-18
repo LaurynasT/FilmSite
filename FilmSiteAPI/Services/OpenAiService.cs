@@ -1,15 +1,8 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using NetRefreshTokenDemo.Api.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+using FilmSiteAPI.Models;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace NetRefreshTokenDemo.Api.Services
+namespace FilmSiteAPI.Services
 {
     public interface IOpenAIService
     {
@@ -35,7 +28,7 @@ namespace NetRefreshTokenDemo.Api.Services
             _configuration = configuration;
             _logger = logger;
 
-            _apiKey = _configuration["OpenAI:ApiKey"];
+            _apiKey = _configuration["OpenAI:ApiKey"] ?? throw new InvalidOperationException("No OpenAI api key configured");
             if (string.IsNullOrEmpty(_apiKey))
             {
                 _logger.LogError("OpenAI API key is missing. Please configure it in appsettings.json");
@@ -65,7 +58,7 @@ namespace NetRefreshTokenDemo.Api.Services
 
             // Prepare the favorites list for the prompt
             var favoritesList = new StringBuilder();
-            foreach (var favorite in favorites.Take(10)) // Limit to 10 favorites for better results
+            foreach (var favorite in favorites.Take(10))
             {
                 favoritesList.AppendLine($"- {favorite.Title} ({favorite.MediaType})");
             }
@@ -319,25 +312,25 @@ Only respond with the JSON or the sorry message, nothing else before or after.";
 
     public class OpenAIResponse
     {
-        public string Id { get; set; }
-        public string Object { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public string Object { get; set; } = string.Empty;
         public long Created { get; set; }
-        public string Model { get; set; }
-        public List<OpenAIChoice> Choices { get; set; }
-        public OpenAIUsage Usage { get; set; }
+        public string Model { get; set; } = string.Empty;
+        public List<OpenAIChoice> Choices { get; set; } = [];
+        public required OpenAIUsage Usage { get; set; }
     }
 
     public class OpenAIChoice
     {
         public int Index { get; set; }
-        public OpenAIMessage Message { get; set; }
-        public string FinishReason { get; set; }
+        public required OpenAIMessage Message { get; set; }
+        public string FinishReason { get; set; } = string.Empty;
     }
 
     public class OpenAIMessage
     {
-        public string Role { get; set; }
-        public string Content { get; set; }
+        public string Role { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
     }
 
     public class OpenAIUsage
@@ -349,17 +342,17 @@ Only respond with the JSON or the sorry message, nothing else before or after.";
 
     public class RecommendationResponse
     {
-        public List<MediaRecommendation> Recommendations { get; set; } = new List<MediaRecommendation>();
-        public string Message { get; set; }
+        public List<MediaRecommendation> Recommendations { get; set; } = [];
+        public string Message { get; set; } = string.Empty;
     }
 
     public class MediaRecommendation
     {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string ReasonForRecommendation { get; set; }
-        public string MediaType { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string ReasonForRecommendation { get; set; } = string.Empty;
+        public string MediaType { get; set; } = string.Empty;
 
         public decimal Score { get; set; }
     }

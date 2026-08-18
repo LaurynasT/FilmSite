@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NetRefreshTokenDemo.Api.Models.DTOs;
+namespace FilmSiteAPI.DTOs;
 
-public class LoginModel
+public class LoginDTO
 {
     [Required]
     public string Email { get; set; } = string.Empty;

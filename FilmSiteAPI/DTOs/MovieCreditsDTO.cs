@@ -1,10 +1,12 @@
 using System.Text.Json.Serialization;
+using FilmSiteAPI.Models;
 
+namespace FilmSiteAPI.DTOs;
 public class CreditsResponseDto
 {
     [JsonPropertyName("cast")]
-    public List<CastModel> Cast { get; set; } = new();
+    public List<CastDTO> Cast { get; set; } = new();
 
     [JsonPropertyName("crew")]
-    public List<CrewModel> Crew { get; set; } = new();
+    public List<CrewDTO> Crew { get; set; } = new();
 }

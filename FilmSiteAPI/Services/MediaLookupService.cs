@@ -1,12 +1,6 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace NetRefreshTokenDemo.Api.Services
+namespace FilmSiteAPI.Services
 {
     public interface IMediaLookupService
     {
@@ -30,10 +24,11 @@ namespace NetRefreshTokenDemo.Api.Services
             _logger = logger;
 
             // Get TMDB API key from configuration
-            _apiKey = _configuration["TMDB:ApiKey"];
+            _apiKey = _configuration["TMDB:ApiKey"] ?? throw new InvalidOperationException("No API KEY ");
             if (string.IsNullOrEmpty(_apiKey))
             {
                 _logger.LogWarning("TMDB API key is missing. ID lookup will not work.");
+                
             }
         }
 
@@ -42,7 +37,7 @@ namespace NetRefreshTokenDemo.Api.Services
             if (string.IsNullOrEmpty(_apiKey))
             {
                 _logger.LogWarning($"Unable to look up ID for '{title}' - API key not configured");
-                return null;
+                throw new InvalidOperationException($"Unable to look up ID for '{title}' - API key not configured");
             }
 
             try
@@ -58,7 +53,7 @@ namespace NetRefreshTokenDemo.Api.Services
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"TMDB API error: {response.StatusCode} when searching for '{title}'");
-                    return null;
+                    throw new InvalidOperationException($"TMDB API error: {response.StatusCode} when searching for '{title}'");
                 }
 
                 // Parse the response
@@ -72,7 +67,7 @@ namespace NetRefreshTokenDemo.Api.Services
                 if (searchResult?.Results == null || searchResult.Results.Count == 0)
                 {
                     _logger.LogWarning($"No results found for '{title}'");
-                    return null;
+                    throw new InvalidOperationException($"Error looking up title for '{title}'");
                 }
 
                 // Return the ID of the first (most relevant) match
@@ -81,14 +76,14 @@ namespace NetRefreshTokenDemo.Api.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error looking up ID for '{title}'");
-                return null;
+                throw new InvalidOperationException($"Error looking up ID for '{title}'");
             }
         }
 
         private class TMDBSearchResponse
         {
             public int Page { get; set; }
-            public List<TMDBSearchResult> Results { get; set; }
+            public List<TMDBSearchResult> Results { get; set; } = [];
             public int TotalResults { get; set; }
             public int TotalPages { get; set; }
         }
@@ -96,8 +91,8 @@ namespace NetRefreshTokenDemo.Api.Services
         private class TMDBSearchResult
         {
             public int Id { get; set; }
-            public string Title { get; set; }
-            public string Name { get; set; } // For TV shows
+            public string Title { get; set; } = string.Empty;
+            public string Name { get; set; }  = string.Empty;
             // Other properties omitted for brevity
         }
     }

@@ -1,4 +1,4 @@
-namespace NetRefreshTokenDemo.Api.Constants;
+namespace FilmSiteAPI.Constants;
 
 public class Roles
 {

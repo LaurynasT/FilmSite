@@ -1,5 +1,6 @@
 using System.Text.Json;
 
+namespace FilmSiteAPI.Services;
 public abstract class TmdbBaseService
 {
     protected readonly HttpClient _httpClient;
@@ -10,7 +11,7 @@ public abstract class TmdbBaseService
     protected TmdbBaseService(HttpClient httpClient, IConfiguration config)
     {
         _httpClient = httpClient;
-        _apiKey = config["TMDB:ApiKey"];
+        _apiKey = config["TMDB:ApiKey"] ?? throw new InvalidOperationException("No api key");
     }
 
     protected async Task<T> GetAsync<T>(string url)
@@ -26,6 +27,6 @@ public abstract class TmdbBaseService
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            });
+            }) ?? throw new JsonException("Failed to deserialize TMDB response.");
     }
 }

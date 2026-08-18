@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using NetRefreshTokenDemo.Api.Interfaces;
-using NetRefreshTokenDemo.Api.Models.DTOs;
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Interfaces;
+using FilmSiteAPI.Models;
 
+namespace FilmSiteAPI.Services;
 public class TmdbTvService : TmdbBaseService, ITmdbTvInterface
 {
     public TmdbTvService(HttpClient httpClient, IConfiguration config)
@@ -23,11 +24,11 @@ public class TmdbTvService : TmdbBaseService, ITmdbTvInterface
         return await GetAsync<TrailerResponseDto>(url);
     }
 
-    public Task<ResponseDTO<PopularTvModel>> GetPopularTvAsync()
+    public Task<ResponseDTO<PopularTvDTO>> GetPopularTvAsync()
     {
         var url = $"{BaseUrl}/tv/popular?api_key={_apiKey}&language=en-US";
 
-        return GetAsync<ResponseDTO<PopularTvModel>>(url);
+        return GetAsync<ResponseDTO<PopularTvDTO>>(url);
     }
 
     public Task<CreditsResponseDto> GetTvCreditsAsync(int id)
@@ -36,7 +37,7 @@ public class TmdbTvService : TmdbBaseService, ITmdbTvInterface
 
         return GetAsync<CreditsResponseDto>(url);
     }
-    public Task<ResponseDTO<DiscoverTvModel>> GetDiscoverTvAsync(
+    public Task<ResponseDTO<DiscoverTvDTO>> GetDiscoverTvAsync(
     int page,
     string sortBy,
     string genres,
@@ -53,7 +54,7 @@ public class TmdbTvService : TmdbBaseService, ITmdbTvInterface
                   $"&primary_release_year={firstAirYear}" +
                   $"&with_watch_monetization_types=flatrate";
 
-        return GetAsync<ResponseDTO<DiscoverTvModel>>(url);
+        return GetAsync<ResponseDTO<DiscoverTvDTO>>(url);
     }
 
     public Task<TvSeasonDTO> GetTvSeasonDetailAsync( int id, int seasonNumber)
@@ -63,11 +64,11 @@ public class TmdbTvService : TmdbBaseService, ITmdbTvInterface
         return GetAsync<TvSeasonDTO>(url);
     }
 
-    public Task<ResponseDTO<SimilarTvModel>> GetSimilarTvAsync(int id)
+    public Task<ResponseDTO<SimilarTvDTO>> GetSimilarTvAsync(int id)
     {
         var url = $"{BaseUrl}/tv/{id}/similar?api_key={_apiKey}&language=en-US&page=1";
 
-        return GetAsync<ResponseDTO<SimilarTvModel>>(url);
+        return GetAsync<ResponseDTO<SimilarTvDTO>>(url);
     }
 }
 

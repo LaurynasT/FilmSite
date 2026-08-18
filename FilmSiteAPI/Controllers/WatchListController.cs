@@ -1,135 +1,112 @@
+using FilmSiteAPI.DTOs;
+using FilmSiteAPI.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NetRefreshTokenDemo.Api.Models;
-using NetRefreshTokenDemo.Api.Models.DTOs;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace NetRefreshTokenDemo.Api.Controllers
+
+namespace FilmSiteAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class WatchListController : ControllerBase
+    public class WatchListController(IWatchlistInterface watchlistService) : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public WatchListController(AppDbContext context, UserManager<ApplicationUser> userManager)
-        {
-            _context = context;
-            _userManager = userManager;
-        }
-
         [HttpGet]
-        public async Task<IActionResult> GetWatchList([FromQuery] string mediaType = null)
+    public async Task<IActionResult> GetWatchList([FromQuery] string mediaType)
+    {
+        try
         {
-            var username = User.Identity.Name;
-            var user = await _userManager.FindByNameAsync(username);
-
-            if (user == null)
-                return NotFound("User not found");
-
-            var query = _context.WatchList.Where(w => w.UserId == user.Id);
-
-            if (!string.IsNullOrEmpty(mediaType))
-            {
-                query = query.Where(w => w.MediaType == mediaType.ToLower());
-            }
-
-            var watchList = await query
-                .OrderByDescending(w => w.AddedOn)
-                .ToListAsync();
-
-            return Ok(watchList);
+            var result = await watchlistService.GetWatchList(mediaType);
+            return Ok(result);
         }
-
-        [HttpPost("add")]
-        public async Task<IActionResult> AddToWatchList([FromBody] AddToWatchListModel model)
+        catch (Exception ex)
         {
-            if (string.IsNullOrEmpty(model.MediaType) || (model.MediaType != "movie" && model.MediaType != "tv"))
-                return BadRequest("MediaType must be either 'movie' or 'tv'");
+            if (ex.Message == "User not found")
+                return NotFound(ex.Message);
 
-            var username = User.Identity.Name;
-            var user = await _userManager.FindByNameAsync(username);
+            if (ex.Message == "User has nothing in WatchList")
+                return NotFound(ex.Message);
 
-            if (user == null)
-                return NotFound("User not found");
+            if (ex.Message == "User is not authenticated")
+                return Unauthorized(ex.Message);
 
-            var existing = await _context.WatchList
-                .FirstOrDefaultAsync(w =>
-                    w.UserId == user.Id &&
-                    w.MediaId == model.MediaId &&
-                    w.MediaType == model.MediaType);
-
-            if (existing != null)
-                return BadRequest("Media already in watch list");
-
-            var watchListItem = new WatchListItem
-            {
-                UserId = user.Id,
-                MediaId = model.MediaId,
-                MediaType = model.MediaType,
-                Title = model.Title,
-                PosterPath = model.PosterPath,
-                AddedOn = DateTime.UtcNow
-            };
-
-            _context.WatchList.Add(watchListItem);
-            await _context.SaveChangesAsync();
-
-            return Ok(watchListItem);
+            return StatusCode(500, ex.Message);
         }
+    }
 
-        [HttpDelete("remove")]
-        public async Task<IActionResult> RemoveFromWatchList([FromQuery] int mediaId, [FromQuery] string mediaType)
+    [HttpPost("add")]
+    public async Task<IActionResult> AddToWatchList([FromBody] AddUserMediaDTO addFavorite)
+    {
+        try
         {
-            if (string.IsNullOrEmpty(mediaType) || (mediaType != "movie" && mediaType != "tv"))
-                return BadRequest("MediaType must be either 'movie' or 'tv'");
-
-            var username = User.Identity.Name;
-            var user = await _userManager.FindByNameAsync(username);
-
-            if (user == null)
-                return NotFound("User not found");
-
-            var watchListItem = await _context.WatchList
-                .FirstOrDefaultAsync(w =>
-                    w.UserId == user.Id &&
-                    w.MediaId == mediaId &&
-                    w.MediaType == mediaType);
-
-            if (watchListItem == null)
-                return NotFound("Media not in watch list");
-
-            _context.WatchList.Remove(watchListItem);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            var added = await watchlistService.AddToWatchList(addFavorite);
+            return Ok(added);
         }
-
-        [HttpGet("check")]
-        public async Task<IActionResult> CheckWatchList([FromQuery] int mediaId, [FromQuery] string mediaType)
+        catch (Exception ex)
         {
-            if (string.IsNullOrEmpty(mediaType) || (mediaType != "movie" && mediaType != "tv"))
-                return BadRequest("MediaType must be either 'movie' or 'tv'");
+            if (ex.Message == "MediaType must be either 'movie' or 'tv'")
+                return BadRequest(ex.Message);
 
-            var username = User.Identity.Name;
-            var user = await _userManager.FindByNameAsync(username);
+            if (ex.Message == "Media already in watchlist")
+                return BadRequest(ex.Message);
 
-            if (user == null)
-                return NotFound("User not found");
+            if (ex.Message == "User not found")
+                return NotFound(ex.Message);
 
-            var isInWatchList = await _context.WatchList
-                .AnyAsync(w =>
-                    w.UserId == user.Id &&
-                    w.MediaId == mediaId &&
-                    w.MediaType == mediaType);
+            if (ex.Message == "User is not authenticated")
+                return Unauthorized(ex.Message);
 
-            return Ok(new { isInWatchList });
+            return StatusCode(500, ex.Message);
         }
+    }
+
+    [HttpDelete("remove")]
+    public async Task<IActionResult> RemoveFromWatchList([FromQuery] int mediaId, [FromQuery] string mediaType)
+    {
+        try
+        {
+            await watchlistService.DeleteFromWatchList(mediaId, mediaType);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "MediaType must be either 'movie' or 'tv'")
+                return BadRequest(ex.Message);
+
+            if (ex.Message == "Media not in watchlist")
+                return BadRequest(ex.Message);
+
+            if (ex.Message == "User not found")
+                return NotFound(ex.Message);
+
+            if (ex.Message == "User is not authenticated")
+                return Unauthorized(ex.Message);
+
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("check")]
+    public async Task<IActionResult> CheckWatchlist([FromQuery] int mediaId, [FromQuery] string mediaType)
+    {
+        try
+        {
+            var result = await watchlistService.CheckWatchList(mediaId, mediaType);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "MediaType must be either 'movie' or 'tv'")
+                return BadRequest(ex.Message);
+
+            if (ex.Message == "User not found")
+                return NotFound(ex.Message);
+
+            if (ex.Message == "User is not authenticated")
+                return Unauthorized(ex.Message);
+
+            return StatusCode(500, ex.Message);
+        }
+    }
     }
 }

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
-public class TokenModel
+namespace FilmSiteAPI.DTOs;
+public class TokenDTO
 {
     [Required]
     public string AccessToken { get; set; } = string.Empty;
